@@ -33,4 +33,12 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, viewXAngle, transform.eulerAngles.z);
         rb.velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * speed + new Vector3(0, rb.velocity.y, 0));
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.GetComponent<Climbable>())
+        {
+            
+        }
+    }
 }
