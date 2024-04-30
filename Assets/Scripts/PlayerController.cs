@@ -50,7 +50,14 @@ public class PlayerController : MonoBehaviour
         //cam.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
         //cam.transform.Rotate(cam.transform.right, Input.GetAxis("Mouse Y"));
         RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if (Input.GetButton("Crouch"))
+        {
+            //We want no player movement input during sliding
+            transform.localScale = new Vector3(1, 0.5f, 1);
+        } else {
+            transform.localScale = new Vector3(1, 1, 1);
+            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
     }
 
 
