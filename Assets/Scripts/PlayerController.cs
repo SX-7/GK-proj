@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private float viewYAngle = 0f;
     private float viewXAngle = 0f;
     private List<Collider> vaultTargets = new List<Collider>();
+    private bool climbing = false;
+    [SerializeField] float climbingTime = 0.2f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,15 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (!climbing)
+        {
+            ProcessMovement();
+        }
+        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+    }
+
+    private void ProcessMovement()
     {
         if (Input.GetButtonDown("Jump"))
         {
@@ -36,30 +47,33 @@ public class PlayerController : MonoBehaviour
                 if (vaultTargets.Count > 0)
                 {
                     var positions = vaultTargets.Select(
-                        (x,index) => GetClimbableVaultTarget(x)
+                        (x, index) => GetClimbableVaultTarget(x)
                         ).Where(
-                        x => Vector3.Distance(x,transform.position) < col.bounds.size.y
+                        x => Vector3.Distance(x, transform.position) < col.bounds.size.y
                         ).ToList();
-                    if (positions.Count>0)
+                    if (positions.Count > 0)
                     {
-                        transform.position = positions.First();
+                        Climb(positions.First());
                     }
                 }
             }
         }
         //cam.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
         //cam.transform.Rotate(cam.transform.right, Input.GetAxis("Mouse Y"));
-        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        
         if (Input.GetButton("Crouch"))
         {
             //We want no player movement input during sliding
             transform.localScale = new Vector3(1, 0.5f, 1);
-        } else {
+            cam.transform.position = transform.position + new Vector3(0, transform.localScale.y, 0);
+        }
+        else
+        {
             transform.localScale = new Vector3(1, 1, 1);
+            cam.transform.position = transform.position + new Vector3(0, 0.5f, 0);
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -113,5 +127,37 @@ public class PlayerController : MonoBehaviour
         viewXAngle += x_delta;
         cam.transform.eulerAngles = new Vector3(viewYAngle, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, viewXAngle, transform.eulerAngles.z);
+    }
+
+    private void Climb(Vector3 destination)
+    {
+        // calculate path (up then forward)
+        var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        // start coroutine with path 
+        StartCoroutine(ClimbCR(midpoint,destination));
+    }
+
+    private IEnumerator ClimbCR(Vector3 midpoint, Vector3 destination)
+    {
+        climbing = true;
+        rb.velocity = Vector3.zero;
+        var anim_time = climbingTime;
+        var start = transform.position;
+        var to_mid_len = Vector3.Distance(start, midpoint);
+        var to_end_len = Vector3.Distance(midpoint, destination);
+        var to_mid_time = anim_time * to_mid_len / (to_mid_len + to_end_len);
+        var to_end_time = anim_time * to_end_len / (to_mid_len + to_end_len);
+        for (float i = 0; i < to_mid_time; i+=Time.deltaTime)
+        {
+            transform.position = Vector3.Lerp(start, midpoint, i/to_mid_time);
+            yield return null;
+        }
+        for (float i = 0; i < to_end_time; i += Time.deltaTime)
+        {
+            transform.position = Vector3.Lerp(midpoint, destination, i/to_end_time);
+            yield return null;
+        }
+        climbing = false;
+        rb.velocity = (destination-midpoint).normalized*1f;
     }
 }
