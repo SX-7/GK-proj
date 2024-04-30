@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Climbable : MonoBehaviour
+public class Climbable : Walkable
 {
     public List<float> offsets = new List<float>();
     [SerializeField] BoxCollider bc;
