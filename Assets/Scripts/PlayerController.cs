@@ -28,9 +28,9 @@ public class PlayerController : MonoBehaviour
         {
             if(
                 Physics.RaycastAll(
-                    transform.TransformPoint(col.center) - new Vector3(0, col.bounds.size.y / 2, 0), 
+                    transform.TransformPoint(col.center) - new Vector3(0, col.bounds.size.y / 3, 0), 
                     Vector3.down, 
-                    0.1f
+                    0.5f
                 ).Where(
                     x => x.transform.GetComponent<Walkable>() != null
                 ).ToList().Count > 0
@@ -38,8 +38,6 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
             }
-            Debug.Log(transform.TransformPoint(col.center) - new Vector3(0, col.bounds.size.y / 2, 0));
-            
         }
         //cam.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
         //cam.transform.Rotate(cam.transform.right, Input.GetAxis("Mouse Y"));
