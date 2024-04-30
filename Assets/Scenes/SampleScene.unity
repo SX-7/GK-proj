@@ -480,7 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f25e2545b2c344ba519393672df972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsets:
+  climbLevels:
   - 2.5
   bc: {fileID: 644833313}
 --- !u!1 &926697879
@@ -769,8 +769,8 @@ Transform:
   m_GameObject: {fileID: 1441020242}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1034462, y: 0.84, z: -4.36}
-  m_LocalScale: {x: 6.103, y: 1, z: 2.129}
+  m_LocalPosition: {x: -1.37, y: 0.84, z: -9.54}
+  m_LocalScale: {x: 15.497348, y: 1, z: 14.433711}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -933,7 +933,7 @@ MonoBehaviour:
   rb: {fileID: 1642621471}
   cam: {fileID: 963194227}
   col: {fileID: 1642621467}
-  climbingTime: 0.2
+  climbingTime: 0.3
 --- !u!136 &1642621473
 CapsuleCollider:
   m_ObjectHideFlags: 0

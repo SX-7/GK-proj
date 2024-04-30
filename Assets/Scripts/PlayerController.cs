@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private float viewXAngle = 0f;
     private List<Collider> vaultTargets = new List<Collider>();
     private bool climbing = false;
-    [SerializeField] float climbingTime = 0.2f;
+    [SerializeField] float climbingTime = 0.3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,16 +63,39 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetButton("Crouch"))
         {
+            CrouchingMode(true);
+        }
+        else
+        {
+            CrouchingMode(false);
+            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
+    }
+
+    private void CrouchingMode(bool crouch)
+    {
+        if (crouch)
+        {
             //We want no player movement input during sliding
             transform.localScale = new Vector3(1, 0.5f, 1);
             cam.transform.position = transform.position + new Vector3(0, transform.localScale.y, 0);
         }
         else
         {
-            transform.localScale = new Vector3(1, 1, 1);
-            cam.transform.position = transform.position + new Vector3(0, 0.5f, 0);
-            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if(Physics.RaycastAll(
+                    transform.TransformPoint(col.center) + new Vector3(0, col.bounds.size.y / 3, 0),
+                    Vector3.up,
+                    col.bounds.size.y
+                ).Where(
+                    x => x.transform.GetComponent<PlayerController>() == null
+                ).ToList().Count == 0)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                cam.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            }
+            
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -99,7 +122,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 GetClimbableVaultTarget(Collider other)
     {
         var contact_point = other.transform.InverseTransformPoint(other.ClosestPointOnBounds(transform.position));
-        contact_point.y = other.GetComponent<Climbable>().offsets.Where(x => x / other.transform.localScale.y >= contact_point.y).Min() / other.transform.localScale.y;
+        contact_point.y = other.GetComponent<Climbable>().climbLevels.Where(x => x / other.transform.localScale.y >= contact_point.y).Min() / other.transform.localScale.y;
         var destination = other.transform.TransformPoint(contact_point);
         return destination + new Vector3(0, col.bounds.size.y / 2, 0);
     }
