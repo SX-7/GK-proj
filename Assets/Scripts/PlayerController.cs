@@ -11,18 +11,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] Camera cam;
     [SerializeField] CapsuleCollider col;
+    [SerializeField] SphereCollider sph;
     private float viewYAngle = 0f;
     private float viewXAngle = 0f;
     private List<Collider> vaultTargets = new List<Collider>();
     private bool climbing = false;
     [SerializeField] float climbingTime = 0.3f;
+    private Vector3 origCamPos;
     // Start is called before the first frame update
     void Start()
     {
         //make sure we grab something
         if (rb == null) { rb = GetComponent<Rigidbody>(); }
         if (cam == null) { cam = GetComponentInChildren<Camera>(); }
-        if (col == null) { col = GetComponent<CapsuleCollider>(); }
+        col = col != null ? col : GetComponent<CapsuleCollider>();
+        if (sph == null) { sph = GetComponent<SphereCollider>(); }
+        origCamPos = cam.transform.localPosition;
     }
 
     // Update is called once per frame
@@ -52,7 +56,7 @@ public class PlayerController : MonoBehaviour
                     var positions = vaultTargets.Select(
                         (x, index) => GetClimbableVaultTarget(x)
                         ).Where(
-                        x => Vector3.Distance(x, transform.position) < col.bounds.size.y
+                        x => Vector3.Distance(x, transform.position) < 2 * col.bounds.size.y
                         ).ToList();
                     if (positions.Count > 0)
                     {
@@ -81,8 +85,11 @@ public class PlayerController : MonoBehaviour
         if (crouch)
         {
             //We want no player movement input during sliding
-            transform.localScale = new Vector3(1, 0.5f, 1);
-            cam.transform.position = transform.position + new Vector3(0, transform.localScale.y, 0);
+            col.height = 0.95f;
+            col.center = new Vector3(0, 0.6f, 0);
+            sph.center = new Vector3(0,0.6f,0);
+            //transform.localScale = new Vector3(1, 0.5f, 1);
+            cam.transform.localPosition = origCamPos*0.5f;
         }
         else
         {
@@ -95,8 +102,10 @@ public class PlayerController : MonoBehaviour
                     x => x.transform.GetComponent<PlayerController>() == null
                 ).ToList().Count == 0)
             {
-                transform.localScale = new Vector3(1, 1, 1);
-                cam.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+                col.height = 1.9f;
+                col.center = new Vector3(0, 1f, 0);
+                sph.center = new Vector3(0, 0.5f, 0);
+                cam.transform.localPosition = origCamPos;
             }
 
         }
@@ -131,7 +140,7 @@ public class PlayerController : MonoBehaviour
         var contact_point = other.transform.InverseTransformPoint(other.ClosestPointOnBounds(transform.position));
         contact_point.y = other.GetComponent<Climbable>().climbLevels.Where(x => x / other.transform.localScale.y >= contact_point.y).Min() / other.transform.localScale.y;
         var destination = other.transform.TransformPoint(contact_point);
-        return destination + new Vector3(0, col.bounds.size.y / 2, 0);
+        return destination;
     }
 
     private bool OnWalkable()
@@ -191,6 +200,6 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         climbing = false;
-        rb.velocity = (destination - midpoint).normalized * 10f;
+        rb.velocity = (destination - midpoint).normalized * speed *1.5f;
     }
 }
