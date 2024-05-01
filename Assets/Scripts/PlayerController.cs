@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private bool crouching = false;
     public delegate void CrouchAction(bool crouching);
     public static event CrouchAction OnCrouchChange;
+    public delegate void JumpAction();
+    public static event JumpAction OnJump;
     // Start is called before the first frame update
     void Start()
     {
@@ -177,6 +179,10 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+        if (OnJump != null)
+        {
+            OnJump();
+        }
     }
 
     private void RotateCamera(float x_delta, float y_delta)
