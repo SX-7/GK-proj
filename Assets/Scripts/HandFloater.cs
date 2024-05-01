@@ -18,6 +18,7 @@ public class HandFloater : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //basically makes the hand do a little float around
         var destination = initPos + new Vector3(
                 -controller.transform.InverseTransformDirection(playerRb.velocity).x / 500,
                 -controller.transform.InverseTransformDirection(playerRb.velocity).y / 200,
