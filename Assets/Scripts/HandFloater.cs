@@ -20,7 +20,7 @@ public class HandFloater : MonoBehaviour
     {
         var destination = initPos + new Vector3(
                 -controller.transform.InverseTransformDirection(playerRb.velocity).x / 500,
-                -controller.transform.InverseTransformDirection(playerRb.velocity).y / 500,
+                -controller.transform.InverseTransformDirection(playerRb.velocity).y / 200,
                 -controller.transform.InverseTransformDirection(playerRb.velocity).z / 500
             );
         transform.localPosition = Vector3.Lerp(transform.localPosition, destination, 0.02f);

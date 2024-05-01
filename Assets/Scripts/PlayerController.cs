@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     private bool climbing = false;
     [SerializeField] float climbingTime = 0.3f;
     private Vector3 origCamPos;
+    private bool crouching = false;
+    public delegate void CrouchAction(bool crouching);
+    public static event CrouchAction OnCrouchChange;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +87,14 @@ public class PlayerController : MonoBehaviour
     {
         if (crouch)
         {
+            if (!crouching)
+            {
+                crouching = true; 
+                if(OnCrouchChange != null)
+                {
+                    OnCrouchChange(crouching);
+                }
+            }
             //We want no player movement input during sliding
             col.height = 0.95f;
             col.center = new Vector3(0, 0.6f, 0);
@@ -102,6 +113,14 @@ public class PlayerController : MonoBehaviour
                     x => x.transform.GetComponent<PlayerController>() == null
                 ).ToList().Count == 0)
             {
+                if (crouching)
+                {
+                    crouching = false;
+                    if(OnCrouchChange!= null)
+                    {
+                        OnCrouchChange(crouching);
+                    }
+                }
                 col.height = 1.9f;
                 col.center = new Vector3(0, 1f, 0);
                 sph.center = new Vector3(0, 0.5f, 0);
