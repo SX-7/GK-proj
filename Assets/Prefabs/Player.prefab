@@ -5176,6 +5176,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4400047889143513421}
+  - component: {fileID: 5766358538142840928}
   m_Layer: 0
   m_Name: Dash Charge Manager
   m_TagString: Untagged
@@ -5198,6 +5199,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7405191332507533214}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5766358538142840928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5951259175997940548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 677ba8daae48ec44f9b08ce6d178d3e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashCharge: {fileID: 6785043554554579406, guid: bca3116e4b64f8d40abcff33516230f3, type: 3}
+  playerController: {fileID: 2831771202787326415}
+  orbitRadius: 0.5
+  orbitSpeed: 30
 --- !u!1 &6781273731715191183
 GameObject:
   m_ObjectHideFlags: 0
@@ -5358,7 +5375,10 @@ MonoBehaviour:
   col: {fileID: 0}
   sph: {fileID: 0}
   climbingTime: 0.3
+  dashCooldown: 2
+  dashDuration: 0.3
   dashForce: 35
+  maxDashes: 3
 --- !u!135 &2400883414546992317
 SphereCollider:
   m_ObjectHideFlags: 0
