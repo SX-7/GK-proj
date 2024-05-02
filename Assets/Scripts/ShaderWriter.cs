@@ -26,9 +26,9 @@ public class ShaderWriter : MonoBehaviour
         mapTextMaterial.SetColor(
             "_Color",
             new Color(
-                (1+Mathf.Sin(timer))/2,
-                (1+Mathf.Sin(timer+1))/2,
-                (1+Mathf.Sin(timer+2))/2
+                (2+Mathf.Sin(timer))/4,
+                (2+Mathf.Sin(timer+1))/4,
+                (2+Mathf.Sin(timer+2))/4
             )
         );
     }

@@ -24,12 +24,20 @@ public class PlayerController : MonoBehaviour
     public delegate void JumpAction();
     public static event JumpAction OnJump;
     [SerializeField] float dashCooldown = 2f;
+    public float DashCooldown { get => dashCooldown;}
     [SerializeField] float dashDuration = 0.3f;
+    public float DashDuration { get => dashDuration;}
     [SerializeField] float dashForce = 50f;
+    [SerializeField] int maxDashes = 3;
+    public int MaxDashes { get => maxDashes;}
     private float dashTimer = 0f;
+    private int currentDashes = 0;
+    public int CurrentDashes { get => currentDashes; }
     private bool dashing = false;
-    public delegate void DashAction();
+    public delegate void DashAction(int currentDashes);
     public static event DashAction OnDash;
+    public delegate void DashRestoreAction(int currentDashes);
+    public static event DashRestoreAction OnDashRestore;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,9 +52,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(dashTimer);
         if(dashTimer> 0f)
         {
             dashTimer-= Time.deltaTime;
+        }
+        else if (currentDashes < maxDashes)
+        {
+            currentDashes++;
+            dashTimer = DashCooldown;
+            if(OnDashRestore != null)
+            {
+                OnDashRestore(CurrentDashes);
+            }
         }
         //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
         if (!(climbing||dashing))
@@ -205,12 +223,13 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        if(dashTimer<=0f)
+        if(CurrentDashes>0)
         {
             dashTimer = dashCooldown;
+            currentDashes--;
             if (OnDash != null)
             {
-                OnDash();
+                OnDash(currentDashes);
             }
             StartCoroutine(DashLockout());
         }   
