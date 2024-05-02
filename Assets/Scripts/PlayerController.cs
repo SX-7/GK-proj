@@ -23,6 +23,13 @@ public class PlayerController : MonoBehaviour
     public static event CrouchAction OnCrouchChange;
     public delegate void JumpAction();
     public static event JumpAction OnJump;
+    [SerializeField] float dashCooldown = 2f;
+    [SerializeField] float dashDuration = 0.3f;
+    [SerializeField] float dashForce = 50f;
+    private float dashTimer = 0f;
+    private bool dashing = false;
+    public delegate void DashAction();
+    public static event DashAction OnDash;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,8 +44,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(dashTimer> 0f)
+        {
+            dashTimer-= Time.deltaTime;
+        }
         //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
-        if (!climbing)
+        if (!(climbing||dashing))
         {
             ProcessMovement();
         }
@@ -162,7 +173,13 @@ public class PlayerController : MonoBehaviour
         {
             des_hor_vel = des_hor_vel.normalized;
         }
-        rb.velocity = transform.TransformDirection(des_hor_vel * speed + new Vector3(0, rb.velocity.y, 0));
+        des_hor_vel *= speed;
+        //var cur_hor_vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        //if ((Vector3.Dot(des_hor_vel, cur_hor_vel) < 0.8f || cur_hor_vel.magnitude<speed) && des_hor_vel.magnitude>0.1)
+        //{
+            rb.velocity = transform.TransformDirection(des_hor_vel + new Vector3(0, rb.velocity.y, 0));
+        //}
+        
     }
 
     private Vector3 GetClimbableVaultTarget(Collider other)
@@ -188,7 +205,26 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-
+        if(dashTimer<=0f)
+        {
+            dashTimer = dashCooldown;
+            if (OnDash != null)
+            {
+                OnDash();
+            }
+            StartCoroutine(DashLockout());
+        }   
+    }
+    private IEnumerator DashLockout()
+    {
+        dashing = true;
+        for (float i = dashTimer; i > (dashCooldown - dashDuration); i = dashTimer)
+        {
+            rb.velocity = cam.transform.forward * dashForce;
+            yield return null;
+        }
+        rb.velocity = rb.velocity.normalized * speed;
+        dashing = false;
     }
 
     private void Jump()
