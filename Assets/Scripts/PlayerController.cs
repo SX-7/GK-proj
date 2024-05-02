@@ -83,6 +83,11 @@ public class PlayerController : MonoBehaviour
             CrouchingMode(false);
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
+
+        if (Input.GetButton("Dash"))
+        {
+            Dash();
+        }
     }
 
     private void CrouchingMode(bool crouch)
@@ -152,7 +157,12 @@ public class PlayerController : MonoBehaviour
 
     private void Move(float leftright, float frontback)
     {
-        rb.velocity = transform.TransformDirection(new Vector3(leftright, 0, frontback) * speed + new Vector3(0, rb.velocity.y, 0));
+        var des_hor_vel = new Vector3(leftright, 0, frontback);
+        if (des_hor_vel.magnitude > 1)
+        {
+            des_hor_vel = des_hor_vel.normalized;
+        }
+        rb.velocity = transform.TransformDirection(des_hor_vel * speed + new Vector3(0, rb.velocity.y, 0));
     }
 
     private Vector3 GetClimbableVaultTarget(Collider other)
@@ -174,6 +184,11 @@ public class PlayerController : MonoBehaviour
                 ).Where(
                     x => x.transform.GetComponent<Walkable>() != null
                 ).ToList().Count > 0;
+    }
+
+    private void Dash()
+    {
+
     }
 
     private void Jump()
