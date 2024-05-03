@@ -23,6 +23,21 @@ public class PlayerController : MonoBehaviour
     public static event CrouchAction OnCrouchChange;
     public delegate void JumpAction();
     public static event JumpAction OnJump;
+    [SerializeField] float dashCooldown = 2f;
+    public float DashCooldown { get => dashCooldown;}
+    [SerializeField] float dashDuration = 0.3f;
+    public float DashDuration { get => dashDuration;}
+    [SerializeField] float dashForce = 50f;
+    [SerializeField] int maxDashes = 3;
+    public int MaxDashes { get => maxDashes;}
+    private float dashTimer = 0f;
+    private int currentDashes = 0;
+    public int CurrentDashes { get => currentDashes; }
+    private bool dashing = false;
+    public delegate void DashAction(int currentDashes);
+    public static event DashAction OnDash;
+    public delegate void DashRestoreAction(int currentDashes);
+    public static event DashRestoreAction OnDashRestore;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,8 +52,22 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(dashTimer);
+        if(dashTimer> 0f)
+        {
+            dashTimer-= Time.deltaTime;
+        }
+        else if (currentDashes < maxDashes)
+        {
+            currentDashes++;
+            dashTimer = DashCooldown;
+            if(OnDashRestore != null)
+            {
+                OnDashRestore(CurrentDashes);
+            }
+        }
         //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
-        if (!climbing)
+        if (!(climbing||dashing))
         {
             ProcessMovement();
         }
@@ -82,6 +111,11 @@ public class PlayerController : MonoBehaviour
             //it is possible to stop crouch when you can't physically uncrouch, due to no limited friction during crouch, we allow movement to avoid softlocks
             CrouchingMode(false);
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
+
+        if (Input.GetButton("Dash"))
+        {
+            Dash();
         }
     }
 
@@ -152,7 +186,18 @@ public class PlayerController : MonoBehaviour
 
     private void Move(float leftright, float frontback)
     {
-        rb.velocity = transform.TransformDirection(new Vector3(leftright, 0, frontback) * speed + new Vector3(0, rb.velocity.y, 0));
+        var des_hor_vel = new Vector3(leftright, 0, frontback);
+        if (des_hor_vel.magnitude > 1)
+        {
+            des_hor_vel = des_hor_vel.normalized;
+        }
+        des_hor_vel *= speed;
+        //var cur_hor_vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        //if ((Vector3.Dot(des_hor_vel, cur_hor_vel) < 0.8f || cur_hor_vel.magnitude<speed) && des_hor_vel.magnitude>0.1)
+        //{
+            rb.velocity = transform.TransformDirection(des_hor_vel + new Vector3(0, rb.velocity.y, 0));
+        //}
+        
     }
 
     private Vector3 GetClimbableVaultTarget(Collider other)
@@ -174,6 +219,31 @@ public class PlayerController : MonoBehaviour
                 ).Where(
                     x => x.transform.GetComponent<Walkable>() != null
                 ).ToList().Count > 0;
+    }
+
+    private void Dash()
+    {
+        if(CurrentDashes>0)
+        {
+            dashTimer = dashCooldown;
+            currentDashes--;
+            if (OnDash != null)
+            {
+                OnDash(currentDashes);
+            }
+            StartCoroutine(DashLockout());
+        }   
+    }
+    private IEnumerator DashLockout()
+    {
+        dashing = true;
+        for (float i = dashTimer; i > (dashCooldown - dashDuration); i = dashTimer)
+        {
+            rb.velocity = cam.transform.forward * dashForce;
+            yield return null;
+        }
+        rb.velocity = rb.velocity.normalized * speed;
+        dashing = false;
     }
 
     private void Jump()
