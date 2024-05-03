@@ -278,7 +278,10 @@ public class PlayerController : MonoBehaviour
         dashing = true;
         for (float i = dashTimer; i > (dashCooldown - dashDuration); i = dashTimer)
         {
-            rb.velocity = cam.transform.forward * dashForce;
+            var dash_dir = cam.transform.forward;
+            dash_dir.y /= 20;
+            dash_dir.Normalize();
+            rb.velocity = dash_dir * dashForce;
             yield return null;
         }
         rb.velocity = rb.velocity.normalized * speed;
