@@ -10,10 +10,10 @@ public class PlayerRespawn : MonoBehaviour
         startPosition = transform.position;
     }
 
-    void Update()
+    void OnCollisionEnter(Collision other)
     {
-        // Continuously check for a fall beyond the respawn threshold
-        if (transform.position.y < -20)  // Threshold for falling, adjust as needed
+        // Check if the player has collided with the lava
+        if (other.gameObject.CompareTag("Lava"))
         {
             Respawn();
         }
