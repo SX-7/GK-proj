@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float currentHealth = 100;
     public float CurrentHealth { get => currentHealth; }
     [SerializeField] float iFrames = 1f;
+    public float IFrames { get => iFrames; }
     private float iFrameTimer = 0f;
     public delegate void ReceiveDamageAction(DamageInfo damageInfo);
     public static event ReceiveDamageAction OnReceiveDamage;

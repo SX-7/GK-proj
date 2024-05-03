@@ -1007,6 +1007,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2831771202787326415, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
+      propertyPath: iFrames
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2831771202787326415, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: currentHealth
       value: 100
       objectReference: {fileID: 0}
