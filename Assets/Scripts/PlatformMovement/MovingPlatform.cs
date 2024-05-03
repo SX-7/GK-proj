@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public enum MovementDirection { Horizontal, Vertical }  // Options for movement direction
-    public MovementDirection direction = MovementDirection.Horizontal;  // Default movement direction
-    public float moveDistance = 10f;  // Distance the platform moves from the start position
-    public float speed = 1.0f;  // Movement speed
+    public GameObject player;
+    public Vector3 movementVector;
+    public float speed = 1.0f;
 
     private Vector3 startPosition;
     private Vector3 endPosition;
@@ -15,27 +14,36 @@ public class MovingPlatform : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
-        SetMovementDirection();
+        endPosition = startPosition + movementVector;  // Calculate the end position
         startTime = Time.time;
         journeyLength = Vector3.Distance(startPosition, endPosition);
     }
 
     void Update()
     {
-        float fractionOfJourney = (Time.time - startTime) * speed / journeyLength;
-        transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.PingPong(fractionOfJourney, 1));
+        MovePlatform();
     }
 
-    private void SetMovementDirection()
+    void MovePlatform()
     {
-        // Set end position based on the selected movement direction
-        if (direction == MovementDirection.Horizontal)
+        float fractionOfJourney = (Time.time - startTime) * speed / journeyLength;
+        Vector3 newPlatformPosition = Vector3.Lerp(startPosition, endPosition, Mathf.PingPong(fractionOfJourney, 1));
+        transform.position = newPlatformPosition;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == player)
         {
-            endPosition = startPosition + Vector3.right * moveDistance;
+            collision.transform.SetParent(transform, true);
         }
-        else if (direction == MovementDirection.Vertical)
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject == player)
         {
-            endPosition = startPosition + Vector3.up * moveDistance;
+            collision.transform.SetParent(null);
         }
     }
 }
