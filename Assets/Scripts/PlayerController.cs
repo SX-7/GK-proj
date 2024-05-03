@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] CapsuleCollider col;
     [SerializeField] SphereCollider sph;
+    [SerializeField] Vector3 respawnPosition;
     private float viewYAngle = 0f;
     private float viewXAngle = 0f;
     private List<Collider> vaultTargets = new List<Collider>();
@@ -47,6 +48,7 @@ public class PlayerController : MonoBehaviour
         col = col != null ? col : GetComponent<CapsuleCollider>();
         if (sph == null) { sph = GetComponent<SphereCollider>(); }
         origCamPos = cam.transform.localPosition;
+        if(respawnPosition == null) { respawnPosition= transform.position; }
     }
 
     // Update is called once per frame
@@ -71,6 +73,44 @@ public class PlayerController : MonoBehaviour
             ProcessMovement();
         }
         RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //for debug
+        if (Input.GetButtonDown("Interact"))
+        {
+            SetRespawn();
+        }
+        if (Input.GetButtonDown("Respawn"))
+        {
+            Respawn();
+        }
+    }
+
+    private void SetRespawn()
+    {
+        respawnPosition = transform.position;
+    }
+
+    private void SetRespawn(Vector3 respawn_position)
+    {
+        respawnPosition = respawn_position;
+    }
+
+    private void Respawn()
+    {
+        transform.position = respawnPosition;
+        rb.velocity = Vector3.zero;
+        StartCoroutine(RespawnLock());
+    }
+    private IEnumerator RespawnLock()
+    {
+        var _timer = 0f;
+        while (_timer<0.1f)
+        {
+            _timer += Time.deltaTime;
+            transform.position = respawnPosition;
+            rb.velocity = Vector3.zero;
+            yield return null;
+        }
+        
     }
 
     private void ProcessMovement()
