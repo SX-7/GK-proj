@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Lava
+  - FxTemporaire
+  - Obstacle
+  - Obstcales
+  - Blade
   layers:
   - Default
   - TransparentFX
