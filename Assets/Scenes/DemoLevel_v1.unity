@@ -1109,7 +1109,6 @@ GameObject:
   - component: {fileID: 171368682}
   - component: {fileID: 171368681}
   - component: {fileID: 171368680}
-  - component: {fileID: 171368679}
   - component: {fileID: 171368678}
   m_Layer: 0
   m_Name: MovingPlatform (3)
@@ -1145,18 +1144,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &171368679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 171368677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35034c6064da5e941a6d2305f60e06fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &171368680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1185,7 +1172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1791573766}
-  movementVector: {x: 0, y: 0, z: 15}
+  movementVector: {x: 0, y: 0, z: -15}
   speed: 2
 --- !u!114 &171368682
 MonoBehaviour:
@@ -1281,7 +1268,7 @@ Transform:
   m_GameObject: {fileID: 171368677}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 1.7500098, z: -865.9}
+  m_LocalPosition: {x: 3.5, y: 1.7500098, z: -850.9}
   m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11559,15 +11546,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5322547
+      value: 1.3575635
       objectReference: {fileID: 0}
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.8366292
+      value: 1.2327638
       objectReference: {fileID: 0}
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -770.35126
+      value: -992.9918
       objectReference: {fileID: 0}
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13804,7 +13791,6 @@ GameObject:
   - component: {fileID: 1151961192}
   - component: {fileID: 1151961191}
   - component: {fileID: 1151961190}
-  - component: {fileID: 1151961197}
   - component: {fileID: 1151961189}
   m_Layer: 0
   m_Name: MovingPlatform (1)
@@ -13970,18 +13956,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1151961197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151961188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35034c6064da5e941a6d2305f60e06fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1166286630
 GameObject:
   m_ObjectHideFlags: 0
