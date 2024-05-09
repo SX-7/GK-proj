@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     public static event SlowMotionStateChange OnSlowMotion;
     private InputBuffer inputs = new();
     private bool slowing = false;
+    [SerializeField] float coyoteJumpTime = 0.12f;
+    private float cJumpTimer = 0f;
     // Start is called before the first frame update
 
     private void Awake()
@@ -160,6 +162,11 @@ public class PlayerController : MonoBehaviour
         {
             jumpTimer -= Time.deltaTime;
         }
+        if (cJumpTimer > 0f)
+        {
+            cJumpTimer -= Time.deltaTime;
+            Debug.Log(cJumpTimer);
+        }
     }
 
     private void ReceiveDamage(DamageInfo damage)
@@ -234,10 +241,11 @@ public class PlayerController : MonoBehaviour
     {
         if (inputs.CheckForAction(InputAction.Jump))
         {
-            if (OnWalkable() && jumpTimer <= 0f)
+            if ((OnWalkable() && jumpTimer <= 0f)||cJumpTimer>0f)
             {
                 Jump();
                 jumpTimer = jumpCooldown;
+                cJumpTimer = 0f;
             }
             else
             {
@@ -462,6 +470,23 @@ public class PlayerController : MonoBehaviour
         }
         climbing = false;
         rb.velocity = (destination - midpoint).normalized * maxSpeed * 1.5f;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Walkable>() != null && jumpTimer <= 0f)
+        {
+            List<ContactPoint> contacts = new();
+            collision.GetContacts(contacts);
+            if (contacts.Where(
+                x => x.thisCollider.GetType() == typeof(SphereCollider)
+                ).ToList().Count > 0)
+            {
+                Debug.Log("Set");
+                cJumpTimer = coyoteJumpTime;
+            };
+        }
+
     }
 }
 public struct DamageInfo

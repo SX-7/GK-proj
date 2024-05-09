@@ -5523,6 +5523,7 @@ MonoBehaviour:
   dashDuration: 0.3
   dashForce: 35
   maxDashes: 3
+  coyoteJumpTime: 0.12
 --- !u!135 &2400883414546992317
 SphereCollider:
   m_ObjectHideFlags: 0
