@@ -331,7 +331,7 @@ public class PlayerController : MonoBehaviour
             {
                 OnDash(currentDashes);
             }
-            inputs.DequeueAction(InputAction.Dash);
+            inputs.ClearAction(InputAction.Dash);
             StartCoroutine(DashLockout());
         }
     }
@@ -352,12 +352,13 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
+        rb.velocity = new Vector3(rb.velocity.x,0f,rb.velocity.z);
         rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
         if (OnJump != null)
         {
             OnJump();
         }
-        inputs.DequeueAction(InputAction.Jump);
+        inputs.ClearAction(InputAction.Jump);
     }
 
     private void RotateCamera(float x_delta, float y_delta)
@@ -374,7 +375,7 @@ public class PlayerController : MonoBehaviour
     {
         // calculate path (up then forward)
         var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
-        inputs.DequeueAction(InputAction.Jump);
+        inputs.ClearAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
     }
@@ -486,6 +487,25 @@ public class InputBuffer : List<ActionItem>
             }
         }
         return null;
+    }
+
+    public void ClearAction(InputAction inputAction)
+    {
+        try
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this.ElementAt(i).Action == inputAction)
+                {
+                    RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+        catch
+        {
+
+        }
     }
 
     public bool CheckForAction(InputAction inputAction) {
