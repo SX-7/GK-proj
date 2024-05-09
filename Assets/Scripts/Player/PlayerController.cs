@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         //for debug
         if (Input.GetButtonDown("Interact"))
         {
-            SetRespawn();
+            SnapSetRespawn();
         }
         if (Input.GetButtonDown("Respawn"))
         {
@@ -189,7 +189,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetRespawn()
+    private void Heal(float health)
+    {
+        if (health < 0)
+        {
+            currentHealth = maxHealth;
+        }
+        else
+        {
+            currentHealth = Mathf.Clamp(currentHealth + health, 0, maxHealth);
+        }
+    }
+
+    private void SnapSetRespawn()
     {
         respawnPosition = transform.position;
     }
