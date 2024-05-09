@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
     private bool slowing = false;
     [SerializeField] float coyoteJumpTime = 0.12f;
     private float cJumpTimer = 0f;
+    public delegate void FireAction();
+    public static event FireAction OnFire;
     // Start is called before the first frame update
 
     private void Awake()
@@ -97,7 +99,14 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
-
+        if (Input.GetButtonDown("Fire2") && currentDashes > 0)
+        {
+            currentDashes -= 1;
+            if (OnFire != null)
+            {
+                OnFire();
+            }
+        }
     }
 
     private void DoSlowMotion()
@@ -165,7 +174,6 @@ public class PlayerController : MonoBehaviour
         if (cJumpTimer > 0f)
         {
             cJumpTimer -= Time.deltaTime;
-            Debug.Log(cJumpTimer);
         }
     }
 
@@ -241,7 +249,7 @@ public class PlayerController : MonoBehaviour
     {
         if (inputs.CheckForAction(InputAction.Jump))
         {
-            if ((OnWalkable() && jumpTimer <= 0f)||cJumpTimer>0f)
+            if ((OnWalkable() && jumpTimer <= 0f) || cJumpTimer > 0f)
             {
                 Jump();
                 jumpTimer = jumpCooldown;
@@ -482,7 +490,6 @@ public class PlayerController : MonoBehaviour
                 x => x.thisCollider.GetType() == typeof(SphereCollider)
                 ).ToList().Count > 0)
             {
-                Debug.Log("Set");
                 cJumpTimer = coyoteJumpTime;
             };
         }

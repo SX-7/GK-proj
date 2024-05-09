@@ -21,12 +21,14 @@ public class DashChargeManager : MonoBehaviour
     {
         PlayerController.OnDashRestore += OnDashRestore;
         PlayerController.OnDash += OnDash;
+        PlayerController.OnFire += OnFire;
     }
 
     private void OnDisable()
     {
         PlayerController.OnDashRestore -= OnDashRestore;
         PlayerController.OnDash -= OnDash;
+        PlayerController.OnFire -= OnFire;
     }
 
     private void OnDash(int dashCount)
@@ -39,6 +41,12 @@ public class DashChargeManager : MonoBehaviour
     private void OnDashRestore(int dashCount)
     {
         dashCharges.Enqueue(Instantiate(dashCharge, transform));
+    }
+
+    private void OnFire()
+    {
+        var target = dashCharges.Dequeue();
+        Destroy(target);
     }
     // Update is called once per frame
     void Update()
