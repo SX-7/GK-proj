@@ -369,13 +369,15 @@ public class PlayerController : MonoBehaviour
     private bool OnWalkable()
     {
         //test if object with walkable is *right* below us (we're standing on it)
-        return Physics.RaycastAll(
-                    transform.TransformPoint(col.center) - new Vector3(0, col.bounds.size.y / 3, 0),
+        return Physics.SphereCastAll(
+                    transform.TransformPoint(col.center) - new Vector3(0, 0.5f, 0),
+                    0.5f,
                     Vector3.down,
-                    0.5f
+                    0.1f
                 ).Where(
                     x => x.transform.GetComponent<Walkable>() != null
                 ).ToList().Count > 0;
+
     }
 
     private void Dash()
