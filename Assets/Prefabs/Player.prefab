@@ -94,6 +94,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8935848692661318741}
+  - component: {fileID: 6028554475929010943}
   m_Layer: 0
   m_Name: HpScaler
   m_TagString: Untagged
@@ -117,6 +118,19 @@ Transform:
   - {fileID: 5324332019982933013}
   m_Father: {fileID: 6025588533511212009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6028554475929010943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930762107225966946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf23a8768739c04b930eb541b07ff0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 2831771202787326415}
 --- !u!1 &2792490273156548002
 GameObject:
   m_ObjectHideFlags: 0
@@ -5402,6 +5416,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 10
   jumpHeight: 10
+  maxHealth: 100
+  currentHealth: 100
+  iFrames: 1
   rb: {fileID: 8584989347442214125}
   cam: {fileID: 3738562707248907441}
   col: {fileID: 0}
