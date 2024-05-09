@@ -11,7 +11,7 @@ public class Hazard : MonoBehaviour
     void Start()
     {
         if(hurtArea == null) hurtArea = GetComponent<Collider>();
-        if(!hurtArea.isTrigger) throw new UnassignedReferenceException("No trigger area found/assigned!");
+        if(!hurtArea.isTrigger) throw new UnassignedReferenceException("No trigger area found/assigned on object "+ name);
     }
 
     private void OnTriggerStay(Collider other)
