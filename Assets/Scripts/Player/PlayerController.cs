@@ -86,6 +86,16 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Time.timeScale = 0.5f;
+            Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
+        }
     }
     private void BufferInput()
     {

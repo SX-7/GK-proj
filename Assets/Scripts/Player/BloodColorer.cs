@@ -15,7 +15,6 @@ public class BloodColorer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(playerController.CurrentHealth / playerController.MaxHealth);
         GetComponent<Renderer>().material.SetColor("_Color",gradient.Evaluate(playerController.CurrentHealth / playerController.MaxHealth));
         GetComponent<Renderer>().material.SetColor("_EmissionColor", gradient.Evaluate(playerController.CurrentHealth / playerController.MaxHealth));
     }
