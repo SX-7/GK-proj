@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxSpeed = 10f;
     public float MaxSpeed { get => maxSpeed; }
     [SerializeField] float jumpHeight = 10f;
+    [SerializeField] float jumpCooldown = 0.1f;
+    private float jumpTimer = 0.0f;
     [SerializeField] float maxHealth = 100;
     public float MaxHealth { get => maxHealth; }
     [SerializeField] float currentHealth = 100;
@@ -116,6 +118,10 @@ public class PlayerController : MonoBehaviour
                 OnDashRestore(CurrentDashes);
             }
         }
+        if (jumpTimer > 0f)
+        {
+            jumpTimer-= Time.deltaTime;
+        }
     }
 
     private void ReceiveDamage(DamageInfo damage)
@@ -178,9 +184,10 @@ public class PlayerController : MonoBehaviour
     {
         if (inputs.CheckForAction(InputAction.Jump))
         {
-            if (OnWalkable())
+            if (OnWalkable()&&jumpTimer<=0f)
             {
                 Jump();
+                jumpTimer = jumpCooldown;
             }
             else
             {
@@ -451,8 +458,7 @@ public class InputBuffer : List<ActionItem>
         while(Count > 0)
         {
             if (!this[0].CheckIfValid())
-            {
-                Debug.Log("removed " + this[0]+" "+Count);
+            { 
                 RemoveAt(0);
             }
             else
@@ -515,6 +521,5 @@ public class InputBuffer : List<ActionItem>
     public void EnqueueAction(InputAction inputAction)
     {
         Add(new ActionItem(inputAction, Time.time));
-        Debug.Log("Added " +inputAction.ToString()+" "+Count);
     }
 }
