@@ -94,7 +94,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8935848692661318741}
-  - component: {fileID: 6028554475929010943}
+  - component: {fileID: 2737693449315203071}
   m_Layer: 0
   m_Name: HpScaler
   m_TagString: Untagged
@@ -118,7 +118,7 @@ Transform:
   - {fileID: 5324332019982933013}
   m_Father: {fileID: 6025588533511212009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6028554475929010943
+--- !u!114 &2737693449315203071
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

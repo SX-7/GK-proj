@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static ActionItem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector3 respawnPosition;
     private float viewYAngle = 0f;
     private float viewXAngle = 0f;
-    private List<Collider> vaultTargets = new List<Collider>();
+    private List<Collider> vaultTargets = new();
     private bool climbing = false;
     [SerializeField] float climbingTime = 0.3f;
     private Vector3 origCamPos;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     public static event DashAction OnDash;
     public delegate void DashRestoreAction(int currentDashes);
     public static event DashRestoreAction OnDashRestore;
+    private InputBuffer inputs = new();
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +66,38 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        UpdateTimers();
+        //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
+        BufferInput();
+        if (!(climbing || dashing))
+        {
+            ProcessMovement();
+        }
+        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //for debug
+        if (Input.GetButtonDown("Interact"))
+        {
+            SetRespawn();
+        }
+        if (Input.GetButtonDown("Respawn"))
+        {
+            Respawn();
+        }
+    }
+    private void BufferInput()
+    {
+        inputs.CleanStale();
+        if (Input.GetButtonDown("Jump"))
+        {
+            inputs.EnqueueAction(InputAction.Jump);
+        }
+        if (Input.GetButtonDown("Dash"))
+        {
+            inputs.EnqueueAction(InputAction.Dash);
+        }
+    }
+    private void UpdateTimers()
     {
         if (iFrameTimer > 0f)
         {
@@ -81,21 +115,6 @@ public class PlayerController : MonoBehaviour
             {
                 OnDashRestore(CurrentDashes);
             }
-        }
-        //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
-        if (!(climbing || dashing))
-        {
-            ProcessMovement();
-        }
-        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        //for debug
-        if (Input.GetButtonDown("Interact"))
-        {
-            SetRespawn();
-        }
-        if (Input.GetButtonDown("Respawn"))
-        {
-            Respawn();
         }
     }
 
@@ -125,8 +144,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
 
     private void SetRespawn()
     {
@@ -159,7 +176,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessMovement()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (inputs.CheckForAction(InputAction.Jump))
         {
             if (OnWalkable())
             {
@@ -196,7 +213,7 @@ public class PlayerController : MonoBehaviour
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
 
-        if (Input.GetButton("Dash"))
+        if (inputs.CheckForAction(InputAction.Dash))
         {
             Dash();
         }
@@ -314,6 +331,7 @@ public class PlayerController : MonoBehaviour
             {
                 OnDash(currentDashes);
             }
+            inputs.DequeueAction(InputAction.Dash);
             StartCoroutine(DashLockout());
         }
     }
@@ -339,6 +357,7 @@ public class PlayerController : MonoBehaviour
         {
             OnJump();
         }
+        inputs.DequeueAction(InputAction.Jump);
     }
 
     private void RotateCamera(float x_delta, float y_delta)
@@ -355,6 +374,7 @@ public class PlayerController : MonoBehaviour
     {
         // calculate path (up then forward)
         var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        inputs.DequeueAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
     }
@@ -392,5 +412,89 @@ public struct DamageInfo
     public DamageInfo(float damage, bool forceRespawn){
         this.damage = damage;
         this.forceRespawn = forceRespawn;
+    }
+}
+
+public class ActionItem
+{
+
+    public enum InputAction { Jump, Dash};
+    public InputAction Action;
+    public float Timestamp;
+
+    public static float TimeBeforeActionsExpire = 0.5f;
+
+    //Constructor
+    public ActionItem(InputAction ia, float stamp)
+    {
+        Action = ia;
+        Timestamp = stamp;
+    }
+
+    //returns true if this action hasn't expired due to the timestamp
+    public bool CheckIfValid()
+    {
+        bool returnValue = false;
+        if (Timestamp + TimeBeforeActionsExpire >= Time.time)
+        {
+            returnValue = true;
+        }
+        return returnValue;
+    }
+}
+
+public class InputBuffer : List<ActionItem>
+{
+    public void CleanStale()
+    {
+        while(Count > 0)
+        {
+            if (!this[0].CheckIfValid())
+            {
+                Debug.Log("removed " + this[0]+" "+Count);
+                RemoveAt(0);
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+    }
+
+    public ActionItem PeekAction(InputAction inputAction)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if(this.ElementAt(i).Action == inputAction)
+            {
+                return this.ElementAt(i);
+            }
+        }
+        return null;
+    }
+
+    public ActionItem DequeueAction(InputAction inputAction)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (this.ElementAt(i).Action == inputAction)
+            {
+                var temp = this[i];
+                RemoveAt(i);
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    public bool CheckForAction(InputAction inputAction) {
+        return PeekAction(inputAction)!=null;
+    }
+
+    public void EnqueueAction(InputAction inputAction)
+    {
+        Add(new ActionItem(inputAction, Time.time));
+        Debug.Log("Added " +inputAction.ToString()+" "+Count);
     }
 }
