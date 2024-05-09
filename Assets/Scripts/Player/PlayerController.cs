@@ -101,6 +101,10 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Fire2") && currentDashes > 0)
         {
+            if(currentDashes == maxDashes)
+            {
+                dashTimer = DashCooldown;
+            }
             currentDashes -= 1;
             if (OnFire != null)
             {
