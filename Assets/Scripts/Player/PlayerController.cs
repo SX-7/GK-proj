@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Fire1"))
         {
-            Time.timeScale = 0.5f;
+            Time.timeScale = 0.25f;
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
         }
         if (Input.GetButtonUp("Fire1"))

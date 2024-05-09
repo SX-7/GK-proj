@@ -16,6 +16,7 @@ public class BloodColorer : MonoBehaviour
     void Update()
     {
         GetComponent<Renderer>().material.SetColor("_Color",gradient.Evaluate(playerController.CurrentHealth / playerController.MaxHealth));
-        GetComponent<Renderer>().material.SetColor("_EmissionColor", gradient.Evaluate(playerController.CurrentHealth / playerController.MaxHealth));
+        GetComponent<Renderer>().material.SetColor("_EmissionColor", gradient.Evaluate(playerController.CurrentHealth / playerController.MaxHealth) * Mathf.LinearToGammaSpace(50f));
+        GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
     }
 }
