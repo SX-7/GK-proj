@@ -13,6 +13,7 @@ public class PlayerRespawn : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        //Debug.Log(other.gameObject);
         // Check if the player has collided with the lava
         if (other.gameObject.CompareTag("Lava") || other.gameObject.CompareTag("Blade"))
         {
