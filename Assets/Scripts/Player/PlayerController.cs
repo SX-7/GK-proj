@@ -430,7 +430,7 @@ public class ActionItem
     public InputAction Action;
     public float Timestamp;
 
-    public static float TimeBeforeActionsExpire = 0.5f;
+    public static float TimeBeforeActionsExpire = 0.2f;
 
     //Constructor
     public ActionItem(InputAction ia, float stamp)
