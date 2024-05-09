@@ -55,6 +55,11 @@ public class PlayerController : MonoBehaviour
     public static event DashRestoreAction OnDashRestore;
     private InputBuffer inputs = new();
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
+    }
     void Start()
     {
         //make sure we grab something
