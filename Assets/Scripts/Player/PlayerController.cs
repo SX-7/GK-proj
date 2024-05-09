@@ -53,7 +53,10 @@ public class PlayerController : MonoBehaviour
     public static event DashAction OnDash;
     public delegate void DashRestoreAction(int currentDashes);
     public static event DashRestoreAction OnDashRestore;
+    public delegate void SlowMotionStateChange(bool enabled);
+    public static event SlowMotionStateChange OnSlowMotion;
     private InputBuffer inputs = new();
+    private bool slowing = false;
     // Start is called before the first frame update
 
     private void Awake()
@@ -74,6 +77,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DoSlowMotion();
         UpdateTimers();
         //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
         BufferInput();
@@ -91,15 +95,34 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
-        if (Input.GetButtonDown("Fire1"))
+
+    }
+
+    private void DoSlowMotion()
+    {
+        if (Input.GetButton("Fire1") && CurrentHealth > maxHealth * 0.1f && !slowing)
         {
             Time.timeScale = 0.25f;
-            Time.fixedDeltaTime = 0.02F * Time.timeScale;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            if (OnSlowMotion != null)
+            {
+                OnSlowMotion(true);
+            }
+            slowing = true;
         }
-        if (Input.GetButtonUp("Fire1"))
+        if (!(Input.GetButton("Fire1") && currentHealth > maxHealth * 0.1f) && slowing)
         {
             Time.timeScale = 1;
             Time.fixedDeltaTime = 0.02f;
+            if (OnSlowMotion != null)
+            {
+                OnSlowMotion(false);
+            }
+            slowing = false;
+        }
+        if (slowing)
+        {
+            currentHealth -= (Time.deltaTime / Time.timeScale) * 10;
         }
     }
     private void BufferInput()
@@ -135,7 +158,7 @@ public class PlayerController : MonoBehaviour
         }
         if (jumpTimer > 0f)
         {
-            jumpTimer-= Time.deltaTime;
+            jumpTimer -= Time.deltaTime;
         }
     }
 
@@ -199,7 +222,7 @@ public class PlayerController : MonoBehaviour
     {
         if (inputs.CheckForAction(InputAction.Jump))
         {
-            if (OnWalkable()&&jumpTimer<=0f)
+            if (OnWalkable() && jumpTimer <= 0f)
             {
                 Jump();
                 jumpTimer = jumpCooldown;
@@ -374,7 +397,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        rb.velocity = new Vector3(rb.velocity.x,0f,rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
         if (OnJump != null)
         {
@@ -432,7 +455,8 @@ public struct DamageInfo
     public float damage;
     public bool forceRespawn;
 
-    public DamageInfo(float damage, bool forceRespawn){
+    public DamageInfo(float damage, bool forceRespawn)
+    {
         this.damage = damage;
         this.forceRespawn = forceRespawn;
     }
@@ -441,7 +465,7 @@ public struct DamageInfo
 public class ActionItem
 {
 
-    public enum InputAction { Jump, Dash};
+    public enum InputAction { Jump, Dash };
     public InputAction Action;
     public float Timestamp;
 
@@ -470,10 +494,10 @@ public class InputBuffer : List<ActionItem>
 {
     public void CleanStale()
     {
-        while(Count > 0)
+        while (Count > 0)
         {
             if (!this[0].CheckIfValid())
-            { 
+            {
                 RemoveAt(0);
             }
             else
@@ -481,14 +505,14 @@ public class InputBuffer : List<ActionItem>
                 break;
             }
         }
-        
+
     }
 
     public ActionItem PeekAction(InputAction inputAction)
     {
         for (int i = 0; i < Count; i++)
         {
-            if(this.ElementAt(i).Action == inputAction)
+            if (this.ElementAt(i).Action == inputAction)
             {
                 return this.ElementAt(i);
             }
@@ -529,8 +553,9 @@ public class InputBuffer : List<ActionItem>
         }
     }
 
-    public bool CheckForAction(InputAction inputAction) {
-        return PeekAction(inputAction)!=null;
+    public bool CheckForAction(InputAction inputAction)
+    {
+        return PeekAction(inputAction) != null;
     }
 
     public void EnqueueAction(InputAction inputAction)
