@@ -1252,10 +1252,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 898218362046074848, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: fa1810d222e514c4d94cfecb5590675c, type: 2}
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1295,10 +1291,6 @@ PrefabInstance:
     - target: {fileID: 1524956310373075865, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1691067194421734965, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
-      propertyPath: m_Name
-      value: Pointer
       objectReference: {fileID: 0}
     - target: {fileID: 7095748079867737851, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
       propertyPath: m_Name
