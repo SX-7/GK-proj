@@ -17,6 +17,7 @@ public class Climbable : Walkable
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Climbable))]
 public class DrawWireCube : Editor
 {
@@ -40,3 +41,4 @@ public class DrawWireCube : Editor
 
     }
 }
+#endif

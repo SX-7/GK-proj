@@ -5524,6 +5524,7 @@ MonoBehaviour:
   dashForce: 35
   maxDashes: 3
   coyoteJumpTime: 0.12
+  damage: 50
 --- !u!135 &2400883414546992317
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6049,6 +6050,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 9042fbdeffc60394a9b68286cefff12e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 226ee4115cca3b24ba36c19991898494, type: 2}
     - target: {fileID: 919132149155446097, guid: 9042fbdeffc60394a9b68286cefff12e, type: 3}
       propertyPath: m_Name
       value: Right Hand

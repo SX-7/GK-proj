@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class DashChargeManager : MonoBehaviour
 {
@@ -43,10 +42,10 @@ public class DashChargeManager : MonoBehaviour
         dashCharges.Enqueue(Instantiate(dashCharge, transform));
     }
 
-    private void OnFire()
+    private void OnFire(Vector3 target, float damage)
     {
-        var target = dashCharges.Dequeue();
-        Destroy(target);
+        var sacrifice = dashCharges.Dequeue();
+        sacrifice.GetComponent<DashCharge>().Kamikaze(target, damage);
     }
     // Update is called once per frame
     void Update()

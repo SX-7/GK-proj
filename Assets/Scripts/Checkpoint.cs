@@ -25,7 +25,7 @@ public class Checkpoint : MonoBehaviour
 }
 
 
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(Checkpoint))]
 public class DrawSelectorGizmo : Editor
 {
@@ -43,3 +43,4 @@ public class DrawSelectorGizmo : Editor
 
     }
 }
+#endif

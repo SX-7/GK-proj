@@ -59,8 +59,9 @@ public class PlayerController : MonoBehaviour
     private bool slowing = false;
     [SerializeField] float coyoteJumpTime = 0.12f;
     private float cJumpTimer = 0f;
-    public delegate void FireAction();
+    public delegate void FireAction(Vector3 target, float damage);
     public static event FireAction OnFire;
+    [SerializeField] float damage = 50f;
     // Start is called before the first frame update
 
     private void Awake()
@@ -108,7 +109,8 @@ public class PlayerController : MonoBehaviour
             currentDashes -= 1;
             if (OnFire != null)
             {
-                OnFire();
+                var result = cam.transform.position + cam.transform.forward * 100;
+                OnFire(result, damage);
             }
         }
     }
