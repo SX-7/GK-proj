@@ -18,7 +18,6 @@ public class Destructible : MonoBehaviour
     void ReceiveDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log("Got hit for " + damage + " curr: " + currentHealth);
         if (currentHealth <= 0)
         {
             NoHealth();

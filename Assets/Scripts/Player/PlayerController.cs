@@ -62,6 +62,10 @@ public class PlayerController : MonoBehaviour
     public delegate void FireAction(Vector3 target, float damage);
     public static event FireAction OnFire;
     [SerializeField] float damage = 50f;
+    public delegate void PauseAction(bool paused);
+    public static event PauseAction OnPause;
+    private bool isPaused = false;
+    [SerializeField] GameObject pauseMenu;
     // Start is called before the first frame update
 
     private void Awake()
@@ -82,39 +86,91 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DoSlowMotion();
-        UpdateTimers();
-        //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
-        BufferInput();
-        if (!(climbing || dashing))
+        if (Input.GetKeyDown("escape"))
         {
-            ProcessMovement();
-        }
-        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        //for debug
-        if (Input.GetButtonDown("Interact"))
-        {
-            SnapSetRespawn();
-        }
-        if (Input.GetButtonDown("Respawn"))
-        {
-            Respawn();
-        }
-        if (Input.GetButtonDown("Fire2") && currentDashes > 0)
-        {
-            if(currentDashes == maxDashes)
+            if (isPaused)
             {
-                dashTimer = DashCooldown;
+                if (!slowing)
+                {
+                    Time.timeScale = 1.0f;
+                }
+                else
+                {
+                    Time.timeScale = 0.25f;
+                }
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                isPaused = false;
             }
-            currentDashes -= 1;
-            if (OnFire != null)
+            else
             {
-                var result = cam.transform.position + cam.transform.forward * 100;
-                OnFire(result, damage);
+                Time.timeScale = 0f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                isPaused = true;
+            }
+            if (OnPause != null)
+            {
+                OnPause(isPaused);
+            }
+            pauseMenu.SetActive(isPaused);
+        }
+        if (!isPaused)
+        {
+            DoSlowMotion();
+            UpdateTimers();
+            //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
+            BufferInput();
+            if (!(climbing || dashing))
+            {
+                ProcessMovement();
+            }
+            RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            //for debug
+            if (Input.GetButtonDown("Interact"))
+            {
+                SnapSetRespawn();
+            }
+            if (Input.GetButtonDown("Respawn"))
+            {
+                Respawn();
+            }
+            if (Input.GetButtonDown("Fire2") && currentDashes > 0)
+            {
+                if (currentDashes == maxDashes)
+                {
+                    dashTimer = DashCooldown;
+                }
+                currentDashes -= 1;
+                if (OnFire != null)
+                {
+                    var result = cam.transform.position + cam.transform.forward * 100;
+                    OnFire(result, damage);
+                }
             }
         }
+        
     }
-
+    //for menu
+    private void UnPause()
+    {
+        if (isPaused)
+        {
+            if (!slowing)
+            {
+                Time.timeScale = 1.0f;
+            }
+            else
+            {
+                Time.timeScale = 0.25f;
+            }
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            isPaused = false;
+        }
+        if (OnPause != null)
+        {
+            OnPause(isPaused);
+        }
+        pauseMenu.SetActive(isPaused);
+    }
     private void DoSlowMotion()
     {
         if (Input.GetButton("Fire1") && CurrentHealth > maxHealth * 0.1f && !slowing)
@@ -500,6 +556,11 @@ public class PlayerController : MonoBehaviour
             };
         }
 
+    }
+
+    private void Exit()
+    {
+        Application.Quit();
     }
 }
 public struct DamageInfo

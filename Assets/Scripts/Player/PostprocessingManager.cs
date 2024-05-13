@@ -15,14 +15,15 @@ public class PostprocessingManager : MonoBehaviour
     private ChromaticAberration chr;
     private Grain gra;
     private LensDistortion ldi;
+    private ColorGrading col;
     void Start()
     {
         if (controller == null) { throw new UnassignedReferenceException("No player controller assigned to " + name); }
         if (DamagePpv == null) { throw new UnassignedReferenceException("No post process volume assigned to " + name); }
         if (DashAndSlomoPpv == null) { throw new UnassignedReferenceException("No post process volume assigned to " + name); }
         if (!DamagePpv.profile.TryGetSettings(out vig)) { throw new MissingComponentException("Failed to find " + vig.GetType()); };
-        if (!DamagePpv.profile.TryGetSettings(out gra)) { throw new MissingComponentException("Failed to find " + gra.GetType()); };
-
+        if (!DamagePpv.profile.TryGetSettings(out gra)) { throw new MissingComponentException("Failed to find " + gra.GetType()); }
+        if (!DamagePpv.profile.TryGetSettings(out col)) { throw new MissingComponentException("Failed to find " + col.GetType()); }
         if (!DashAndSlomoPpv.profile.TryGetSettings(out chr)) { throw new MissingComponentException("Failed to find " + chr.GetType()); };
         if (!DashAndSlomoPpv.profile.TryGetSettings(out ldi)) { throw new MissingComponentException("Failed to find " + ldi.GetType()); };
 
@@ -30,6 +31,7 @@ public class PostprocessingManager : MonoBehaviour
         chr.enabled.value = false;
         gra.enabled.value = false;
         ldi.enabled.value = false;
+
     }
 
     private void OnEnable()
@@ -37,12 +39,14 @@ public class PostprocessingManager : MonoBehaviour
         PlayerController.OnReceiveDamage += OnReceiveDamage;
         PlayerController.OnDash += OnDash;
         PlayerController.OnSlowMotion += OnSlowMo;
+        PlayerController.OnPause += OnPause;
     }
     private void OnDisable()
     {
         PlayerController.OnReceiveDamage -= OnReceiveDamage;
         PlayerController.OnDash -= OnDash;
         PlayerController.OnSlowMotion -= OnSlowMo;
+        PlayerController.OnPause -= OnPause;
     }
     private void OnReceiveDamage(DamageInfo damage)
     {
@@ -70,6 +74,15 @@ public class PostprocessingManager : MonoBehaviour
         }
         StartCoroutine(SloMoEffect(state));
     }
+
+    private void OnPause(bool pause)
+    {
+        col.mixerBlueOutBlueIn.overrideState = pause;
+        col.mixerRedOutRedIn.overrideState = pause;
+        col.mixerGreenOutGreenIn.overrideState = pause;
+        col.saturation.overrideState = pause;
+    }
+
     private IEnumerator SloMoEffect(bool state)
     {
         var start = 0.5f;
