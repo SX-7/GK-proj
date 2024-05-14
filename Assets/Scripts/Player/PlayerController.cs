@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static ActionItem;
 
 public class PlayerController : MonoBehaviour
@@ -560,7 +561,17 @@ public class PlayerController : MonoBehaviour
 
     private void Exit()
     {
-        Application.Quit();
+        UnPause();
+        StartCoroutine(ExitCR());
+    }
+    IEnumerator ExitCR()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
     }
 }
 public struct DamageInfo
