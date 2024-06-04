@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,12 @@ public class PlayerController : MonoBehaviour
     public static event PauseAction OnPause;
     private bool isPaused = false;
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] float maxInteractDistance = 2f;
+    private List<Interactable> interactables = new();
+    public delegate void InteractPossibility(bool interactableInRange);
+    public static event InteractPossibility OnInteractPossibility;
+    public delegate void Interact();
+    public static event Interact OnInteract;
     // Start is called before the first frame update
 
     private void Awake()
@@ -82,7 +89,10 @@ public class PlayerController : MonoBehaviour
         if (sph == null) { sph = GetComponent<SphereCollider>(); }
         origCamPos = cam.transform.localPosition;
         if (respawnPosition == null) { respawnPosition = transform.position; }
+        Cursor.visible = isPaused;
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -113,6 +123,7 @@ public class PlayerController : MonoBehaviour
                 OnPause(isPaused);
             }
             pauseMenu.SetActive(isPaused);
+            Cursor.visible = isPaused;
         }
         if (!isPaused)
         {
@@ -125,10 +136,10 @@ public class PlayerController : MonoBehaviour
                 ProcessMovement();
             }
             RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            //for debug
+            UpdateInteractables();
             if (Input.GetButtonDown("Interact"))
             {
-                SnapSetRespawn();
+                AttemptInteract();
             }
             if (Input.GetButtonDown("Respawn"))
             {
@@ -148,8 +159,45 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        
+
     }
+
+    private void UpdateInteractables()
+    {
+        var prevState = false;
+        if (interactables.Any())
+        {
+            prevState = true;
+        }
+        interactables = Physics.RaycastAll(
+            cam.transform.position,
+            cam.transform.forward,
+            maxInteractDistance
+            ).Where(
+            x => x.transform.GetComponent<Interactable>() != null
+            ).Select(x => x.transform.GetComponent<Interactable>()).ToList();
+        if (interactables.Any() && !prevState && OnInteractPossibility != null)
+        {
+            OnInteractPossibility(true);
+        }
+        if (!interactables.Any() && prevState)
+        {
+            OnInteractPossibility(false);
+        }
+    }
+
+    private void AttemptInteract()
+    {
+        if (interactables.Any())
+        {
+            interactables.First().SendMessage("Interact");
+            if(OnInteract!= null)
+            {
+                OnInteract();
+            }
+        }
+    }
+
     //for menu
     private void UnPause()
     {
@@ -171,6 +219,7 @@ public class PlayerController : MonoBehaviour
             OnPause(isPaused);
         }
         pauseMenu.SetActive(isPaused);
+        Cursor.visible = isPaused;
     }
     private void DoSlowMotion()
     {
@@ -540,7 +589,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         climbing = false;
-        rb.velocity = (destination - midpoint).normalized * maxSpeed * 1.5f;
+        rb.velocity = 1.5f * maxSpeed * (destination - midpoint).normalized;
     }
 
     private void OnCollisionStay(Collision collision)

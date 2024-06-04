@@ -13,7 +13,8 @@ public class SceneSelectManager : MonoBehaviour
     private List<Transform> menuButtons;
     [SerializeField] Scrollbar scrl;
     [SerializeField] GameObject buttonPrefab;
-    [Tooltip("Only put scenes here, otherwise it might behave unexpectedly")] [SerializeField] string[] scenesList;
+    [Tooltip("Only put scenes here, otherwise it might behave unexpectedly")][SerializeField] string[] scenesList;
+    [SerializeField] float fadeSpeed = 10f;
     private float scrollRange = 0;
     private float curScrollFac = 0f;
     // Start is called before the first frame update
@@ -22,7 +23,7 @@ public class SceneSelectManager : MonoBehaviour
         var offset = 0;
         foreach (var scene in scenesList)
         {
-            Instantiate(buttonPrefab,transform).GetComponent<SceneButton>().Init(scene,offset);
+            Instantiate(buttonPrefab, transform).GetComponent<SceneButton>().Init(scene, offset);
             offset -= 40;
         }
         scrollRange = -offset;
@@ -39,7 +40,7 @@ public class SceneSelectManager : MonoBehaviour
     {
         foreach (var button in menuButtons)
         {
-            button.GetComponent<RectTransform>().localPosition += new Vector3(0, (scrl.value-curScrollFac)*scrollRange, 0);
+            button.GetComponent<RectTransform>().localPosition += new Vector3(0, (scrl.value - curScrollFac) * scrollRange, 0);
         }
         curScrollFac = scrl.value;
     }
@@ -70,7 +71,7 @@ public class SceneSelectManager : MonoBehaviour
         {
             foreach (var item in menuElements)
             {
-                item.localScale = Vector3.Lerp(item.localScale, new Vector3(1, 1, 1), 0.05f);
+                item.localScale = Vector3.Lerp(item.localScale, new Vector3(1, 1, 1), Time.deltaTime * fadeSpeed);
             }
             timed += Time.deltaTime;
             yield return null;
@@ -95,7 +96,7 @@ public class SceneSelectManager : MonoBehaviour
         {
             foreach (var item in menuElements)
             {
-                item.localScale = Vector3.Lerp(item.localScale, new Vector3(0, 0, 0), 0.05f);
+                item.localScale = Vector3.Lerp(item.localScale, new Vector3(0, 0, 0), Time.deltaTime * fadeSpeed);
             }
             timed += Time.deltaTime;
             yield return null;

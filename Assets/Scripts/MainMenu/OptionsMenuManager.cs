@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class OptionsMenuManager : MonoBehaviour
 {
+    [SerializeField] Camera cam;
     private List<RectTransform> menuElements;
+    [SerializeField] float fadeSpeed = 10f;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,8 +46,8 @@ public class OptionsMenuManager : MonoBehaviour
         {
             foreach (var item in menuElements)
             {
-                item.localScale = Vector3.Lerp(item.localScale, new Vector3(1, 1, 1), 0.1f);
-            }
+                item.localScale = Vector3.Lerp(item.localScale, new Vector3(1, 1, 1), Time.deltaTime * fadeSpeed);
+            }       
             timed += Time.deltaTime;
             yield return null;
         }
@@ -53,7 +55,6 @@ public class OptionsMenuManager : MonoBehaviour
         {
             item.localScale = new Vector3(1, 1, 1);
         }
-
     }
 
     void FadeOut()
@@ -69,7 +70,7 @@ public class OptionsMenuManager : MonoBehaviour
         {
             foreach (var item in menuElements)
             {
-                item.localScale = Vector3.Lerp(item.localScale, new Vector3(0, 0, 0), 0.1f);
+                item.localScale = Vector3.Lerp(item.localScale, new Vector3(0, 0, 0), Time.deltaTime * fadeSpeed);
             }
             timed += Time.deltaTime;
             yield return null;
@@ -78,7 +79,6 @@ public class OptionsMenuManager : MonoBehaviour
         {
             item.localScale = new Vector3(0, 0, 0);
         }
-
     }
 
     private void Cheese()

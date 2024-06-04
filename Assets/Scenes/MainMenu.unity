@@ -1072,6 +1072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9691bf9d5a8b77240a4b0334a0457ecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 255960654}
+  fadeSpeed: 10
 --- !u!1 &947408443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,6 +1985,7 @@ MonoBehaviour:
   buttonPrefab: {fileID: 5377759531855643393, guid: b9a758de02770b04e975439fa274e44d, type: 3}
   scenesList:
   - Assets/Scenes/TestingScene.unity
+  fadeSpeed: 10
 --- !u!1 &1564542216
 GameObject:
   m_ObjectHideFlags: 0
