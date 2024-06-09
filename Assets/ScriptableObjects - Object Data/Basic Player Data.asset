@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d08a40701207f44a800c9823e2e67b, type: 3}
+  m_Name: Basic Player Data
+  m_EditorClassIdentifier: 
+  maxSpeed: 10
+  jumpHeight: 10
+  jumpCooldown: 0.1
+  climbingTime: 0.3
+  postClimbSpeedBurstFactor: 1.5
+  dashCooldown: 2
+  dashDuration: 0.3
+  dashForce: 50
+  maxDashes: 3
+  verticalDashForceDecrease: 20
+  maxHealth: 100
+  initialHealth: 100
+  iFrames: 1
+  damage: 50
+  targettingFocalPointDistance: 100
+  slowDownFactor: 4
+  minimumHealthRequiredToSlowDown: 0.1
+  slowDownHealthDrain: 10
+  coyoteJumpTime: 0.12
+  maxInteractDistance: 2
+  respawnMovementLockoutTime: 0.1

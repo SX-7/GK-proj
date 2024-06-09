@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class InteractableHand : MonoBehaviour
 {
+    [Header("External References")]
+    [SerializeField] VisualsData visualData;
+    private float MovementTime { get => visualData.handMovementTime; }
+    [Header("Context/Object relevant")]
     [SerializeField] float downDistance = 1.0f;
-    [SerializeField] float movementTime = 1.0f;
     private Vector3 initPos;
     private Vector3 downPos;
     private Vector3 desPos;
@@ -45,11 +48,11 @@ public class InteractableHand : MonoBehaviour
     IEnumerator MoveToCR(Vector3 destination)
     {
         var startPos = transform.localPosition;
-        var timer = movementTime;
+        var timer = MovementTime;
         while (timer > 0)
         {
             timer-= Time.deltaTime;
-            transform.localPosition = Vector3.Slerp(startPos, destination, (movementTime-timer)/movementTime);
+            transform.localPosition = Vector3.Slerp(startPos, destination, (MovementTime-timer)/MovementTime);
             yield return null;
         }
     }
