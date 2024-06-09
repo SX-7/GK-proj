@@ -25,6 +25,6 @@ public class RightHandShaderWriter : MonoBehaviour
 
     void OnDash(int count)
     {
-        fancyMaterial.SetFloat("_GradientEffectTimePoint", Time.time + playerController.DashDuration);
+        fancyMaterial.SetFloat("_GradientEffectTimePoint", Time.timeSinceLevelLoad + playerController.DashDuration);
     }
 }
