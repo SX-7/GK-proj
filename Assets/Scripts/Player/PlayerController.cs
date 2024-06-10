@@ -1,69 +1,273 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static ActionItem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float maxSpeed = 10f;
-    public float MaxSpeed { get => maxSpeed; }
-    [SerializeField] float jumpHeight = 10f;
-    [SerializeField] float maxHealth = 100;
-    public float MaxHealth { get => maxHealth; }
-    [SerializeField] float currentHealth = 100;
-    public float CurrentHealth { get => currentHealth; }
-    [SerializeField] float iFrames = 1f;
-    public float IFrames { get => iFrames; }
+    //PlayerData relevant fields
+    [SerializeField] PlayerData playerData;
+    public float MaxSpeed { get => playerData.maxSpeed; }
+    public float JumpHeight { get => playerData.jumpHeight; }
+    public float JumpCooldown { get => playerData.jumpCooldown; }
+
+    public float MaxHealth { get => playerData.maxHealth; }
+    public float InitHealth { get => playerData.initialHealth; }
+    public float IFrames { get => playerData.iFrames; }
+    public float ClimbingTime { get => playerData.climbingTime; }
+    public float DashCooldown { get => playerData.dashCooldown; }
+    public float DashDuration { get => playerData.dashDuration; }
+    public float DashForce { get => playerData.dashForce; }
+    public int MaxDashes { get => playerData.maxDashes; }
+    public float CoyoteJumpTime { get => playerData.coyoteJumpTime; }
+    public float Damage { get => playerData.coyoteJumpTime; }
+    public float MaxInteractDistance { get => playerData.maxInteractDistance; }
+    public float SlowDownFactor { get => playerData.slowDownFactor; }
+    public float TargettingFocalPointDistance { get => playerData.targettingFocalPointDistance; }
+    public float MinimumHealthRequiredToSlowDown { get => playerData.minimumHealthRequiredToSlowDown; }
+    public float SlowDownHealthDrain { get => playerData.slowDownHealthDrain; }
+    public float RespawnMovementLockoutTime { get => playerData.respawnMovementLockoutTime; }
+    public float VerticalDashForceDecrease { get => playerData.verticalDashForceDecrease; }
+    public float PostClimbSpeedBurstFactor { get => playerData.postClimbSpeedBurstFactor; }
+    //Timers
+    private float jumpTimer = 0f;
     private float iFrameTimer = 0f;
-    public delegate void ReceiveDamageAction(DamageInfo damageInfo);
-    public static event ReceiveDamageAction OnReceiveDamage;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Camera cam;
-    [SerializeField] CapsuleCollider col;
-    [SerializeField] SphereCollider sph;
-    [SerializeField] Vector3 respawnPosition;
+    private float dashTimer = 0f;
+    private float dashRestoreTimer = 0f;
+    private float cJumpTimer = 0f;
+    //Internals
+    private float currentHealth;
+    public float CurrentHealth { get => currentHealth; }
     private float viewYAngle = 0f;
     private float viewXAngle = 0f;
-    private List<Collider> vaultTargets = new List<Collider>();
-    private bool climbing = false;
-    [SerializeField] float climbingTime = 0.3f;
+    private List<Collider> vaultTargets = new();
     private Vector3 origCamPos;
+    private int currentDashes = 0;
+    public int CurrentDashes { get => currentDashes; }
+    public Vector3 Velocity { get => rb.velocity; }
+    private InputBuffer inputs = new();
+    private List<Interactable> interactables = new();
+    private float capsuleColliderInitHeight;
+    private Vector3 capsuleColliderInitCenter;
+    private Vector3 sphereColliderInitCenter;
+    //State trackers
     private bool crouching = false;
+    private bool dashing = false;
+    private bool slowing = false;
+    private bool isPaused = false;
+    private bool climbing = false;
+    //Delegates/Events
+    public delegate void ReceiveDamageAction(DamageInfo damageInfo);
+    public static event ReceiveDamageAction OnReceiveDamage;
     public delegate void CrouchAction(bool crouching);
     public static event CrouchAction OnCrouchChange;
     public delegate void JumpAction();
     public static event JumpAction OnJump;
-    [SerializeField] float dashCooldown = 2f;
-    public float DashCooldown { get => dashCooldown; }
-    [SerializeField] float dashDuration = 0.3f;
-    public float DashDuration { get => dashDuration; }
-    [SerializeField] float dashForce = 50f;
-    [SerializeField] int maxDashes = 3;
-    public int MaxDashes { get => maxDashes; }
-    public Vector3 Velocity { get => rb.velocity; }
-    private float dashTimer = 0f;
-    private int currentDashes = 0;
-    public int CurrentDashes { get => currentDashes; }
-    private bool dashing = false;
     public delegate void DashAction(int currentDashes);
     public static event DashAction OnDash;
     public delegate void DashRestoreAction(int currentDashes);
     public static event DashRestoreAction OnDashRestore;
-    // Start is called before the first frame update
+    public delegate void SlowMotionStateChange(bool enabled);
+    public static event SlowMotionStateChange OnSlowMotion;
+    public delegate void FireAction(Vector3 target, float damage);
+    public static event FireAction OnFire;
+    public delegate void InteractPossibility(bool interactableInRange);
+    public static event InteractPossibility OnInteractPossibility;
+    public delegate void Interact();
+    public static event Interact OnInteract;
+    public delegate void PauseAction(bool paused);
+    public static event PauseAction OnPause;
+    //External references
+    [Header("Object References")]
+    [Tooltip("Rigidbody")][SerializeField] Rigidbody rb;
+    [Tooltip("Camera")][SerializeField] Camera cam;
+    [Tooltip("Capsule collider, fullbody one")][SerializeField] CapsuleCollider col;
+    [Tooltip("Sphere collider, for the feet")][SerializeField] SphereCollider sph;
+    [Tooltip("Pause menu object")][SerializeField] GameObject pauseMenu;
+    [Header("Context Relevant Variables")]
+    [Tooltip("Respawn position")][SerializeField] Vector3 respawnPosition;
+    [Header("Physics/Rigidbody Variables - Preferably don't edit")]
+    [Tooltip("Percentage Value")][SerializeField] float crouchColliderScale = 0.5f;
+    [SerializeField] Vector3 capsuleColliderCrouchCenter = new(0, 0.6f, 0);
+    [SerializeField] Vector3 sphereColliderCrouchCenter = new(0, 0.6f, 0);
+    [SerializeField] Vector3 cameraCrouchPosition = new(0, 0.9f, 0);
+    [SerializeField] float maxVerticalCameraAngle = 80;
+    [SerializeField] float minVerticalCameraAngle = -80;
+    private void Awake()
+    {
+        //for some reason debug stuff gets enabled, and idk where to disable it permanenetly
+        //so, bandaid fix
+        UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
+    }
     void Start()
     {
-        //make sure we grab something
+        //make sure we initialize with something
         if (rb == null) { rb = GetComponent<Rigidbody>(); }
         if (cam == null) { cam = GetComponentInChildren<Camera>(); }
         col = col != null ? col : GetComponent<CapsuleCollider>();
+        capsuleColliderInitHeight = col.height;
+        capsuleColliderInitCenter = col.center;
         if (sph == null) { sph = GetComponent<SphereCollider>(); }
+        sphereColliderInitCenter = sph.center;
         origCamPos = cam.transform.localPosition;
         if (respawnPosition == null) { respawnPosition = transform.position; }
+        currentHealth = InitHealth;
+        Cursor.visible = isPaused;
+        SnapSetRespawn();
     }
+
+
 
     // Update is called once per frame
     void Update()
+    {
+        //Process pause
+        if (Input.GetButtonDown("Cancel"))
+        {
+            if (isPaused)
+            {
+                if (!slowing)
+                {
+                    Time.timeScale = 1.0f;
+                }
+                else
+                {
+                    Time.timeScale = 1.0f / SlowDownFactor;
+                }
+                //smoothening magic :shrug:
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                isPaused = false;
+            }
+            else
+            {
+                Time.timeScale = 0f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                isPaused = true;
+            }
+            OnPause?.Invoke(isPaused);
+            pauseMenu.SetActive(isPaused);
+            Cursor.visible = isPaused;
+        }
+        if (!isPaused)
+        {
+            DoSlowMotion();
+            UpdateTimers();
+            BufferInput();
+            //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
+            if (!(climbing || dashing))
+            {
+                ProcessActions();
+            }
+            RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            UpdateInteractables();
+            if (Input.GetButtonDown("Interact"))
+            {
+                AttemptInteract();
+            }
+            if (Input.GetButtonDown("Respawn"))
+            {
+                Respawn();
+            }
+            
+        }
+
+    }
+
+    private void UpdateInteractables()
+    {
+        var prevState = false;
+        if (interactables.Any())
+        {
+            prevState = true;
+        }
+        interactables = Physics.RaycastAll(
+            cam.transform.position,
+            cam.transform.forward,
+            MaxInteractDistance
+            ).Where(
+            x => x.transform.GetComponent<Interactable>() != null
+            ).Select(x => x.transform.GetComponent<Interactable>()).ToList();
+        if (interactables.Any() && !prevState && OnInteractPossibility != null)
+        {
+            OnInteractPossibility(true);
+        }
+        if (!interactables.Any() && prevState)
+        {
+            OnInteractPossibility(false);
+        }
+    }
+
+    private void AttemptInteract()
+    {
+        if (interactables.Any())
+        {
+            interactables.First().SendMessage("Interact");
+            OnInteract?.Invoke();
+        }
+    }
+
+    //for menu
+    private void UnPause()
+    {
+        if (isPaused)
+        {
+            if (!slowing)
+            {
+                Time.timeScale = 1.0f;
+            }
+            else
+            {
+                Time.timeScale = 1.0f / SlowDownFactor;
+            }
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            isPaused = false;
+        }
+        OnPause?.Invoke(isPaused);
+        pauseMenu.SetActive(isPaused);
+        Cursor.visible = isPaused;
+    }
+    private void DoSlowMotion()
+    {
+        if (Input.GetButton("Fire1") && CurrentHealth > MaxHealth * MinimumHealthRequiredToSlowDown && !slowing)
+        {
+            Time.timeScale = 1.0f / SlowDownFactor;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            OnSlowMotion?.Invoke(true);
+            slowing = true;
+        }
+        if (!(Input.GetButton("Fire1") && currentHealth > MaxHealth * MinimumHealthRequiredToSlowDown) && slowing)
+        {
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
+            OnSlowMotion?.Invoke(false);
+            slowing = false;
+        }
+        if (slowing)
+        {
+            currentHealth -= (Time.deltaTime / Time.timeScale) * SlowDownHealthDrain;
+        }
+    }
+    private void BufferInput()
+    {
+        inputs.CleanStale();
+        if (Input.GetButtonDown("Jump"))
+        {
+            inputs.EnqueueAction(InputAction.Jump);
+        }
+        if (Input.GetButtonDown("Dash"))
+        {
+            inputs.EnqueueAction(InputAction.Dash);
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            inputs.EnqueueAction(InputAction.Fire);
+        }
+    }
+    private void UpdateTimers()
     {
         if (iFrameTimer > 0f)
         {
@@ -73,29 +277,23 @@ public class PlayerController : MonoBehaviour
         {
             dashTimer -= Time.deltaTime;
         }
-        else if (currentDashes < maxDashes)
+        if (dashRestoreTimer > 0f)
+        {
+            dashRestoreTimer -= Time.deltaTime;
+        }
+        else if (currentDashes < MaxDashes)
         {
             currentDashes++;
-            dashTimer = DashCooldown;
-            if (OnDashRestore != null)
-            {
-                OnDashRestore(CurrentDashes);
-            }
+            dashRestoreTimer = DashCooldown;
+            OnDashRestore?.Invoke(CurrentDashes);
         }
-        //currently it's a very limited scenario, but if we are in an animation, we want to take control away from the player
-        if (!(climbing || dashing))
+        if (jumpTimer > 0f)
         {
-            ProcessMovement();
+            jumpTimer -= Time.deltaTime;
         }
-        RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        //for debug
-        if (Input.GetButtonDown("Interact"))
+        if (cJumpTimer > 0f)
         {
-            SetRespawn();
-        }
-        if (Input.GetButtonDown("Respawn"))
-        {
-            Respawn();
+            cJumpTimer -= Time.deltaTime;
         }
     }
 
@@ -104,31 +302,35 @@ public class PlayerController : MonoBehaviour
         if (iFrameTimer <= 0f)
         {
             currentHealth -= damage.damage;
-            iFrameTimer = iFrames;
-            if (OnReceiveDamage != null)
-            {
-                OnReceiveDamage(damage);
-            }
+            iFrameTimer = IFrames;
+            OnReceiveDamage?.Invoke(damage);
         }
 
         if (currentHealth <= 0)
         {
             Respawn();
-            currentHealth = maxHealth;
+            currentHealth = MaxHealth;
         }
         else if (damage.forceRespawn)
         {
             Respawn();
-            if (OnReceiveDamage != null)
-            {
-                OnReceiveDamage(new DamageInfo(-damage.damage, damage.forceRespawn));
-            }
+            OnReceiveDamage?.Invoke(new DamageInfo(-damage.damage, damage.forceRespawn));
         }
     }
 
+    private void Heal(float health)
+    {
+        if (health < 0)
+        {
+            currentHealth = MaxHealth;
+        }
+        else
+        {
+            currentHealth = Mathf.Clamp(currentHealth + health, 0, MaxHealth);
+        }
+    }
 
-
-    private void SetRespawn()
+    private void SnapSetRespawn()
     {
         respawnPosition = transform.position;
     }
@@ -142,12 +344,14 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = respawnPosition;
         rb.velocity = Vector3.zero;
+        //stops dashes
+        dashTimer = 0f;
         StartCoroutine(RespawnLock());
     }
     private IEnumerator RespawnLock()
     {
         var _timer = 0f;
-        while (_timer < 0.1f)
+        while (_timer < RespawnMovementLockoutTime)
         {
             _timer += Time.deltaTime;
             transform.position = respawnPosition;
@@ -157,13 +361,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void ProcessMovement()
+    private void ProcessActions()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (inputs.CheckForAction(InputAction.Jump))
         {
-            if (OnWalkable())
+            if ((OnWalkable() && jumpTimer <= 0f) || cJumpTimer > 0f)
             {
                 Jump();
+                jumpTimer = JumpCooldown;
+                cJumpTimer = 0f;
             }
             else
             {
@@ -191,14 +397,30 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //it is possible to stop crouch when you can't physically uncrouch, due to no limited friction during crouch, we allow movement to avoid softlocks
+            //it is possible to stop crouch when you can't physically uncrouch,
+            //due to no limited friction during crouch, we allow movement to avoid softlocks
             CrouchingMode(false);
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
 
-        if (Input.GetButton("Dash"))
+        if (inputs.CheckForAction(InputAction.Dash))
         {
             Dash();
+        }
+
+        if (inputs.CheckForAction(InputAction.Fire) && currentDashes > 0)
+        {
+            if (currentDashes == MaxDashes)
+            {
+                dashRestoreTimer = DashCooldown;
+            }
+            currentDashes -= 1;
+            inputs.ClearAction(InputAction.Fire);
+            if (OnFire != null)
+            {
+                var result = cam.transform.position + cam.transform.forward * TargettingFocalPointDistance;
+                OnFire(result, Damage);
+            }
         }
     }
 
@@ -209,17 +431,17 @@ public class PlayerController : MonoBehaviour
             if (!crouching)
             {
                 crouching = true;
-                if (OnCrouchChange != null)
-                {
-                    OnCrouchChange(crouching);
-                }
+                OnCrouchChange?.Invoke(crouching);
             }
             //We want no player movement input during sliding
-            col.height = 0.95f;
-            col.center = new Vector3(0, 0.6f, 0);
-            sph.center = new Vector3(0, 0.6f, 0);
+            col.height = capsuleColliderInitHeight * crouchColliderScale;
+            //col.center = new Vector3(0, 0.6f, 0);
+            //sph.center = new Vector3(0, 0.6f, 0);
+            col.center = capsuleColliderCrouchCenter;
+            sph.center = sphereColliderCrouchCenter;
             //transform.localScale = new Vector3(1, 0.5f, 1);
-            cam.transform.localPosition = origCamPos * 0.5f;
+            //cam.transform.localPosition = origCamPos * 0.5f;
+            cam.transform.localPosition = cameraCrouchPosition;
         }
         else
         {
@@ -235,14 +457,11 @@ public class PlayerController : MonoBehaviour
                 if (crouching)
                 {
                     crouching = false;
-                    if (OnCrouchChange != null)
-                    {
-                        OnCrouchChange(crouching);
-                    }
+                    OnCrouchChange?.Invoke(crouching);
                 }
-                col.height = 1.9f;
-                col.center = new Vector3(0, 1f, 0);
-                sph.center = new Vector3(0, 0.5f, 0);
+                col.height = capsuleColliderInitHeight;
+                col.center = capsuleColliderInitCenter;
+                sph.center = sphereColliderInitCenter;
                 cam.transform.localPosition = origCamPos;
             }
 
@@ -274,7 +493,7 @@ public class PlayerController : MonoBehaviour
         {
             des_hor_vel = des_hor_vel.normalized;
         }
-        des_hor_vel *= maxSpeed;
+        des_hor_vel *= MaxSpeed;
         //var cur_hor_vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         //if ((Vector3.Dot(des_hor_vel, cur_hor_vel) < 0.8f || cur_hor_vel.magnitude<speed) && des_hor_vel.magnitude>0.1)
         //{
@@ -295,57 +514,57 @@ public class PlayerController : MonoBehaviour
     private bool OnWalkable()
     {
         //test if object with walkable is *right* below us (we're standing on it)
-        return Physics.RaycastAll(
-                    transform.TransformPoint(col.center) - new Vector3(0, col.bounds.size.y / 3, 0),
+        return Physics.SphereCastAll(
+                    transform.TransformPoint(col.center) - new Vector3(0, 0.5f, 0),
+                    0.5f,
                     Vector3.down,
-                    0.5f
+                    0.1f
                 ).Where(
                     x => x.transform.GetComponent<Walkable>() != null
                 ).ToList().Count > 0;
+
     }
 
     private void Dash()
     {
         if (CurrentDashes > 0)
         {
-            dashTimer = dashCooldown;
+            dashRestoreTimer = DashCooldown;
             currentDashes--;
-            if (OnDash != null)
-            {
-                OnDash(currentDashes);
-            }
+            OnDash?.Invoke(currentDashes);
+            inputs.ClearAction(InputAction.Dash);
             StartCoroutine(DashLockout());
         }
     }
     private IEnumerator DashLockout()
     {
         dashing = true;
-        for (float i = dashTimer; i > (dashCooldown - dashDuration); i = dashTimer)
+        dashTimer = DashDuration;
+        while (dashTimer > 0)
         {
             var dash_dir = cam.transform.forward;
-            dash_dir.y /= 20;
+            dash_dir.y /= VerticalDashForceDecrease;
             dash_dir.Normalize();
-            rb.velocity = dash_dir * dashForce;
+            rb.velocity = dash_dir * DashForce;
             yield return null;
         }
-        rb.velocity = rb.velocity.normalized * maxSpeed;
+        rb.velocity = rb.velocity.normalized * MaxSpeed;
         dashing = false;
     }
 
     private void Jump()
     {
-        rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
-        if (OnJump != null)
-        {
-            OnJump();
-        }
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
+        OnJump?.Invoke();
+        inputs.ClearAction(InputAction.Jump);
     }
 
     private void RotateCamera(float x_delta, float y_delta)
     {
         //helper function
         viewYAngle -= y_delta;
-        viewYAngle = Mathf.Clamp(viewYAngle, -80, 80);
+        viewYAngle = Mathf.Clamp(viewYAngle, minVerticalCameraAngle, maxVerticalCameraAngle);
         viewXAngle += x_delta;
         cam.transform.eulerAngles = new Vector3(viewYAngle, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, viewXAngle, transform.eulerAngles.z);
@@ -355,6 +574,7 @@ public class PlayerController : MonoBehaviour
     {
         // calculate path (up then forward)
         var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        inputs.ClearAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
     }
@@ -364,7 +584,7 @@ public class PlayerController : MonoBehaviour
         climbing = true;
         rb.velocity = Vector3.zero;
         //we attempt to finish the animation in one constant motion. might be changed later
-        var anim_time = climbingTime;
+        var anim_time = ClimbingTime;
         var start = transform.position;
         var to_mid_len = Vector3.Distance(start, midpoint);
         var to_end_len = Vector3.Distance(midpoint, destination);
@@ -381,7 +601,39 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         climbing = false;
-        rb.velocity = (destination - midpoint).normalized * maxSpeed * 1.5f;
+        //1.5f
+        rb.velocity = PostClimbSpeedBurstFactor * MaxSpeed * (destination - midpoint).normalized;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Walkable>() != null && jumpTimer <= 0f)
+        {
+            List<ContactPoint> contacts = new();
+            collision.GetContacts(contacts);
+            if (contacts.Where(
+                x => x.thisCollider.GetType() == typeof(SphereCollider)
+                ).ToList().Count > 0)
+            {
+                cJumpTimer = CoyoteJumpTime;
+            };
+        }
+
+    }
+
+    private void Exit()
+    {
+        UnPause();
+        StartCoroutine(ExitCR());
+    }
+    IEnumerator ExitCR()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
     }
 }
 public struct DamageInfo
@@ -389,8 +641,111 @@ public struct DamageInfo
     public float damage;
     public bool forceRespawn;
 
-    public DamageInfo(float damage, bool forceRespawn){
+    public DamageInfo(float damage, bool forceRespawn)
+    {
         this.damage = damage;
         this.forceRespawn = forceRespawn;
+    }
+}
+
+public class ActionItem
+{
+
+    public enum InputAction { Jump, Dash, Fire };
+    public InputAction Action;
+    public float Timestamp;
+    //currently hardcoded cuz it's a seperate class
+    public static float TimeBeforeActionsExpire = 0.2f;
+
+    //Constructor
+    public ActionItem(InputAction ia, float stamp)
+    {
+        Action = ia;
+        Timestamp = stamp;
+    }
+
+    //returns true if this action hasn't expired due to the timestamp
+    public bool CheckIfValid()
+    {
+        bool returnValue = false;
+        if (Timestamp + TimeBeforeActionsExpire >= Time.time)
+        {
+            returnValue = true;
+        }
+        return returnValue;
+    }
+}
+
+public class InputBuffer : List<ActionItem>
+{
+    public void CleanStale()
+    {
+        while (Count > 0)
+        {
+            if (!this[0].CheckIfValid())
+            {
+                RemoveAt(0);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+    }
+
+    public ActionItem PeekAction(InputAction inputAction)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (this.ElementAt(i).Action == inputAction)
+            {
+                return this.ElementAt(i);
+            }
+        }
+        return null;
+    }
+
+    public ActionItem DequeueAction(InputAction inputAction)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (this.ElementAt(i).Action == inputAction)
+            {
+                var temp = this[i];
+                RemoveAt(i);
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    public void ClearAction(InputAction inputAction)
+    {
+        try
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this.ElementAt(i).Action == inputAction)
+                {
+                    RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+        catch
+        {
+
+        }
+    }
+
+    public bool CheckForAction(InputAction inputAction)
+    {
+        return PeekAction(inputAction) != null;
+    }
+
+    public void EnqueueAction(InputAction inputAction)
+    {
+        Add(new ActionItem(inputAction, Time.time));
     }
 }
