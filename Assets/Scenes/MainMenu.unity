@@ -2083,6 +2083,7 @@ MonoBehaviour:
   buttonPrefab: {fileID: 5377759531855643393, guid: b9a758de02770b04e975439fa274e44d, type: 3}
   scenesList:
   - Assets/Scenes/TestingScene.unity
+  - Assets/Scenes/Generatable Level.unity
   fadeSpeed: 10
 --- !u!1 &1564542216
 GameObject:

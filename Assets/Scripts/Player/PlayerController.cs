@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
         if (respawnPosition == null) { respawnPosition = transform.position; }
         currentHealth = InitHealth;
         Cursor.visible = isPaused;
+        SnapSetRespawn();
     }
 
 
