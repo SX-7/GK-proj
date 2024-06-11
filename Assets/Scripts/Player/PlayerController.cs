@@ -152,12 +152,18 @@ public class PlayerController : MonoBehaviour
                 //smoothening magic :shrug:
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 isPaused = false;
+                DataStore.Instance.MuteSFX = false;
+                DataStore.Instance.MuteMusic = false;
+                
             }
             else
             {
                 Time.timeScale = 0f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
-                isPaused = true;
+                isPaused = true; 
+                DataStore.Instance.MuteSFX = true;
+                DataStore.Instance.MuteMusic = true;
+
             }
             OnPause?.Invoke(isPaused);
             pauseMenu.SetActive(isPaused);
@@ -236,6 +242,8 @@ public class PlayerController : MonoBehaviour
             }
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             isPaused = false;
+            DataStore.Instance.MuteSFX=false;
+            DataStore.Instance.MuteMusic=false;
         }
         OnPause?.Invoke(isPaused);
         pauseMenu.SetActive(isPaused);

@@ -16,9 +16,7 @@ public class OptionsMenuManager : MonoBehaviour
     [SerializeField] Slider sfxSlider;
     [SerializeField] Slider fovSlider;
     [SerializeField] Slider sensitivitySlider;
-    [Header("Mixers")]
-    [SerializeField] AudioMixer sfx;
-    [SerializeField] AudioMixer music;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -119,29 +117,11 @@ public class OptionsMenuManager : MonoBehaviour
     private void ReadMusic()
     {
         DataStore.Instance.Music = musicSlider.value;
-        if (musicSlider.value < 1)
-        {
-            music.SetFloat("musicVolume", -80);
-        }
-        else
-        {
-            music.SetFloat("musicVolume", (musicSlider.value / 2) - 30);
-        }
-
     }
 
     private void ReadSFX()
     {
         DataStore.Instance.SFX = sfxSlider.value;
-        if (sfxSlider.value < 1)
-        {
-            sfx.SetFloat("sfxVolume", -80);
-        }
-        else
-        {
-            sfx.SetFloat("sfxVolume", (sfxSlider.value / 2) - 30);
-        }
-
     }
 
     private void ReadFOV()

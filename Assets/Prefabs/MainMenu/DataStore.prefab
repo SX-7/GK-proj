@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   options: {fileID: 11400000, guid: 9c198dae5890d994a89828ab18b99604, type: 2}
+  sfxMixer: {fileID: 24100000, guid: 97bbaebd1f431574cbaa2bc231376238, type: 2}
+  musicMixer: {fileID: 24100000, guid: d62d5787b906951419f1ca35b56c0f4d, type: 2}
