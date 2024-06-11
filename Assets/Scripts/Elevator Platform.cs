@@ -39,7 +39,7 @@ public class ElevatorPlatform : MonoBehaviour
         var timer = 0f;
         while (timer < doorOpeningTime)
         {
-            timer+= Time.deltaTime;
+            timer += Time.deltaTime;
             yield return null;
         }
         OnFinish?.Invoke();

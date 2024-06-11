@@ -1,36 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class LevelCreator : MonoBehaviour
 {
+    [Header("Externals")]
     [SerializeField] PlayerController player;
     [SerializeField] ElevatorPlatform platform;
-    [SerializeField] List<LevelSegment> segments = new();
-    [SerializeField] int segmentCount = 10;
+    [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
+    private List<LevelSegment> Segments { get => segmentsToChooseFrom; }
+    [SerializeField] int levelCount = 3;
+    [SerializeField] int segmentCountPerLevel = 10;
+    private int SegmentCount {  get => segmentCountPerLevel; }
+    [Header("If you put anything here, it'll use these segment indexes, in order, across stages, to create levels.")]
+    [SerializeField] List<int> segmentIndexes = new List<int>();
+    
     private List<LevelSegment> instantiatedSegments = new();
     private PlayerController instantiatedPlayer;
     private ElevatorPlatform startPlatform;
     private ElevatorPlatform endPlatform;
+    private int currentLevel = 0;
 
-    // Start is called before the first frame update
+    
     void Awake()
     {
-        startPlatform = Instantiate(platform);
-        var next_position = platform.transform.TransformPoint(platform.SegmentExitPosition);
-        for (int i = 0; i < segmentCount; i++)
-        {
-            var segment_to_add = segments[Random.Range(0, segments.Count)];
-            instantiatedSegments.Add(Instantiate(segment_to_add, next_position - segment_to_add.segmentEntryPosition, segment_to_add.transform.rotation));
-            next_position = next_position - segment_to_add.segmentEntryPosition + segment_to_add.segmentExitPosition;
-        }
-        endPlatform= Instantiate(platform,next_position-platform.SegmentExitPosition,Quaternion.LookRotation(Vector3.back));
-        endPlatform.exitElevator = true;
-        instantiatedPlayer= Instantiate(player, startPlatform.expectedPlayerPosition.position, Quaternion.LookRotation(Vector3.forward));
+        Rebuild();
+        ElevatorPlatform.OnFinish += Finished;
     }
 
     private void OnEnable()
     {
+        //weird but needed idk
+        ElevatorPlatform.OnFinish -= Finished;
         ElevatorPlatform.OnFinish += Finished;
     }
 
@@ -41,29 +41,53 @@ public class LevelCreator : MonoBehaviour
 
     void Finished()
     {
-        //Delete
-        foreach(var segment in instantiatedSegments)
+        currentLevel++;
+        if (currentLevel < levelCount) {
+            Delete();
+            Rebuild();
+        } else
+        {
+            Delete();
+        }
+
+    }
+    void Delete()
+    {
+        foreach (var segment in instantiatedSegments)
         {
             Destroy(segment.gameObject);
         }
         instantiatedSegments.Clear();
         Destroy(startPlatform.gameObject);
         Destroy(endPlatform.gameObject);
-        Debug.Log("Deleted");
-        //Reinstantate level
+    }
+
+    void Rebuild()
+    {
         startPlatform = Instantiate(platform);
         var next_position = platform.transform.TransformPoint(platform.SegmentExitPosition);
-        for (int i = 0; i < segmentCount; i++)
+        for (int i = 0; i < SegmentCount; i++)
         {
-            var segment_to_add = segments[Random.Range(0, segments.Count)];
+            LevelSegment segment_to_add;
+            if (segmentIndexes.Count > 0)
+            {
+                segment_to_add = Segments[segmentIndexes[i + currentLevel * SegmentCount]];
+            }
+            else
+            {
+                segment_to_add = Segments[Random.Range(0, Segments.Count)];
+            }
+
             instantiatedSegments.Add(Instantiate(segment_to_add, next_position - segment_to_add.segmentEntryPosition, segment_to_add.transform.rotation));
             next_position = next_position - segment_to_add.segmentEntryPosition + segment_to_add.segmentExitPosition;
         }
         endPlatform = Instantiate(platform, next_position - platform.SegmentExitPosition, Quaternion.LookRotation(Vector3.back));
         endPlatform.exitElevator = true;
+        if(instantiatedPlayer == null)
+        {
+            instantiatedPlayer = Instantiate(player, startPlatform.expectedPlayerPosition.position, Quaternion.LookRotation(Vector3.forward));
+        }
         instantiatedPlayer.SendMessage("FadeIn");
         instantiatedPlayer.transform.position = startPlatform.expectedPlayerPosition.position;
-        Debug.Log("Reinstated");
     }
-
 }
