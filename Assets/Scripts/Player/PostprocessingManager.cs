@@ -10,8 +10,17 @@ public class PostprocessingManager : MonoBehaviour
     //unity has for some reasons problems with multiple components, thus i'm splitting it onto a hand
     [SerializeField] PostProcessVolume DashAndSlomoPpv;
     private Vignette vig;
-    [SerializeField] float onDamageRampupTime = 0.1f;
-    [SerializeField] float onDamageRampdownTime = 0.9f;
+    [SerializeField] VisualsData visualsData;
+    private float OnDamageRampupTime { get => visualsData.onDamageRampupTime; }
+    private float OnDamageRampdownTime { get => visualsData.onDamageRampdownTime; }
+    private float SlowMoChromaticEffectScale { get => visualsData.slowMoChromaticEffectScale; }
+    private float SlowMoEffectRampTime { get => visualsData.slowMoEffectRampTime; }
+    private float OnDamageVignetteStartScale { get => visualsData.onDamageVignetteStartScale; }
+    private float OnDamageVignetteMaxScale { get => visualsData.onDamageVignetteMaxScale; }
+    private float OnDamageGrainMaxScale { get => visualsData.onDamageGrainMaxScale; }
+    private float OnDamageGrainStartScale { get => visualsData.onDamageGrainStartScale; }
+    private float OnDashEffectDuration { get => visualsData.onDashEffectDuration; }
+    private float OnDashMaxEffectScale { get => visualsData.onDashMaxEffectScale; }
     private ChromaticAberration chr;
     private Grain gra;
     private LensDistortion ldi;
@@ -70,7 +79,7 @@ public class PostprocessingManager : MonoBehaviour
         }
         else
         {
-            chr.intensity.value = 1;
+            chr.intensity.value = SlowMoChromaticEffectScale;
         }
         StartCoroutine(SloMoEffect(state));
     }
@@ -85,7 +94,8 @@ public class PostprocessingManager : MonoBehaviour
 
     private IEnumerator SloMoEffect(bool state)
     {
-        var start = 0.5f;
+        //slow motion effect rampup/down
+        var start = SlowMoChromaticEffectScale;
         var end = 0f;
         if (state)
         {
@@ -93,10 +103,10 @@ public class PostprocessingManager : MonoBehaviour
             start = 0f;
         }
         float timer = 0f;
-        while (timer < 0.1f)
+        while (timer < SlowMoEffectRampTime)
         {
             timer += Time.unscaledDeltaTime;
-            chr.intensity.value = Mathf.Lerp(start, end, timer / 0.1f);
+            chr.intensity.value = Mathf.Lerp(start, end, timer / SlowMoEffectRampTime);
             yield return null;
         }
     }
@@ -104,18 +114,18 @@ public class PostprocessingManager : MonoBehaviour
     private IEnumerator OnDamageEffect()
     {
         float timer = 0f;
-        while (timer < onDamageRampupTime)
+        while (timer < OnDamageRampupTime)
         {
             timer += Time.deltaTime;
-            vig.intensity.value = Mathf.Lerp(0.1f, 0.25f, timer / onDamageRampupTime);
-            gra.intensity.value = Mathf.Lerp(0, 1, timer / onDamageRampupTime);
+            vig.intensity.value = Mathf.Lerp(OnDamageVignetteStartScale, OnDamageVignetteMaxScale, timer / OnDamageRampupTime);
+            gra.intensity.value = Mathf.Lerp(OnDamageGrainStartScale, OnDamageGrainMaxScale, timer / OnDamageRampupTime);
             yield return null;
         }
-        while (timer < onDamageRampdownTime + onDamageRampupTime)
+        while (timer < OnDamageRampdownTime + OnDamageRampupTime)
         {
             timer += Time.deltaTime;
-            vig.intensity.value = Mathf.Lerp(0f, 0.25f, Mathf.Sqrt(1 - (timer - onDamageRampupTime) / onDamageRampdownTime));
-            gra.intensity.value = Mathf.Lerp(0, 1, Mathf.Sqrt(1 - (timer - onDamageRampupTime) / onDamageRampdownTime));
+            vig.intensity.value = Mathf.Lerp(0f, OnDamageVignetteMaxScale, Mathf.Sqrt(1 - (timer - OnDamageRampupTime) / OnDamageRampdownTime));
+            gra.intensity.value = Mathf.Lerp(0, OnDamageGrainMaxScale, Mathf.Sqrt(1 - (timer - OnDamageRampupTime) / OnDamageRampdownTime));
             yield return null;
         }
         vig.intensity.value = 0;
@@ -124,16 +134,16 @@ public class PostprocessingManager : MonoBehaviour
     private IEnumerator OnDashEffect()
     {
         float timer = 0f;
-        while (timer < 0.05f)
+        while (timer < (OnDashEffectDuration/2))
         {
             timer += Time.deltaTime;
-            ldi.intensity.value = Mathf.Lerp(0, -20, timer / 0.05f);
+            ldi.intensity.value = Mathf.Lerp(0, OnDashMaxEffectScale, timer / (OnDashEffectDuration/2));
             yield return null;
         }
-        while (timer < 0.1f)
+        while (timer < OnDashEffectDuration)
         {
             timer += Time.deltaTime;
-            ldi.intensity.value = Mathf.Lerp(-20, 0, (timer - 0.05f) / 0.05f);
+            ldi.intensity.value = Mathf.Lerp(OnDashMaxEffectScale, 0, (timer - OnDashEffectDuration) / OnDashEffectDuration);
             yield return null;
         }
         ldi.intensity.value = 0;

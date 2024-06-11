@@ -21,6 +21,8 @@ public class ParticleController : MonoBehaviour
     [SerializeField] float crouchParticleAngle = 75;
     [SerializeField] float crouchParticleSpeed = 20;
     [SerializeField] int particlesEmittedOnJump = 25;
+    [SerializeField] float innerSpotScaleFactor = 0.5f;
+    [SerializeField] float lightCrouchOffset = 0.75f;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,26 +50,26 @@ public class ParticleController : MonoBehaviour
         var main = pSys.main;
         if (crouching)
         {
-            transform.localPosition -= new Vector3(0, 0.75f, 0);
+            transform.localPosition -= new Vector3(0, lightCrouchOffset, 0);
             cot.color = crouchGradient;
             shp.angle = crouchParticleAngle;
             main.startSpeed = crouchParticleSpeed;
             lig.intensity = crouchLightIntensity;
             lig.range = crouchLightRange;
             lig.spotAngle = crouchLightAngle;
-            lig.innerSpotAngle = crouchLightAngle/2;
+            lig.innerSpotAngle = crouchLightAngle * innerSpotScaleFactor;
             lig.color = crouchingLightColor;
         }
         else
         {
-            transform.localPosition += new Vector3(0, 0.75f, 0);
+            transform.localPosition += new Vector3(0, lightCrouchOffset, 0);
             cot.color = defaultGradient;
             shp.angle = defaultParticleAngle;
             main.startSpeed = defaultParticleSpeed;
             lig.intensity = defaultLightIntensity;
             lig.range = defaultLightRange;
             lig.spotAngle = defaultLightAngle;
-            lig.innerSpotAngle = defaultLightAngle / 2;
+            lig.innerSpotAngle = defaultLightAngle * innerSpotScaleFactor;
             lig.color = defaultLightColor;
         }
     }
@@ -75,11 +77,5 @@ public class ParticleController : MonoBehaviour
     private void OnJump()
     {
         pSys.Emit(particlesEmittedOnJump);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

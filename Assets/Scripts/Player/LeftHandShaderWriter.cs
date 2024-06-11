@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShaderWriter : MonoBehaviour
+public class LeftHandShaderWriter : MonoBehaviour
 {
     Material mapTextMaterial;
     Renderer _renderer;

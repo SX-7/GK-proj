@@ -1,24 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PlayerController;
 
 public class InteractionIndicator : MonoBehaviour
 {
-    [SerializeField] float shrinkSpeed = 0.2f;
-    [SerializeField] float minSizeScale = 0.8f;
+    [SerializeField] VisualsData visualsData;
+    private float ShrinkSpeed { get => visualsData.indicatorShrinkSpeed; }
+    private float MinSizeScale { get => visualsData.minimumSizeScale; }
     private Vector3 startScale;
+    private Quaternion startRotation;
     private void Start()
     {
         startScale = transform.localScale;
+        startRotation = transform.localRotation;
     }
     private void OnEnable()
     {
         PlayerController.OnInteract += OnInteract;
+        PlayerController.OnInteractPossibility += OnInteractPossibility;
     }
 
     private void OnDisable()
     {
         PlayerController.OnInteract -= OnInteract;
+        PlayerController.OnInteractPossibility -= OnInteractPossibility;
+    }
+
+    private void OnInteractPossibility(bool state)
+    {
+        if (state)
+        {
+            transform.localRotation = startRotation;
+        }
     }
 
     private void OnInteract()
@@ -29,18 +43,18 @@ public class InteractionIndicator : MonoBehaviour
     }
     IEnumerator OnInteractCR()
     {
-        float timer = shrinkSpeed;
+        float timer = ShrinkSpeed;
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            transform.localScale = startScale * Mathf.Lerp(1, minSizeScale, (shrinkSpeed - timer) / shrinkSpeed);
+            transform.localScale = startScale * Mathf.Lerp(1, MinSizeScale, (ShrinkSpeed - timer) / ShrinkSpeed);
             yield return null;
         }
-        timer = shrinkSpeed;
+        timer = ShrinkSpeed;
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            transform.localScale = startScale * Mathf.Lerp(minSizeScale, 1, (shrinkSpeed - timer) / shrinkSpeed);
+            transform.localScale = startScale * Mathf.Lerp(MinSizeScale, 1, (ShrinkSpeed - timer) / ShrinkSpeed);
             yield return null;
         }
     }

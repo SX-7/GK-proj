@@ -7,8 +7,9 @@ public class DashChargeManager : MonoBehaviour
 {
     [SerializeField] GameObject dashCharge;
     [SerializeField] PlayerController playerController;
-    [SerializeField] float orbitRadius = 0.5f;
-    [SerializeField] float orbitSpeed = 30f;
+    [SerializeField] VisualsData visualsData;
+    private float OrbitRadius { get => visualsData.orbitRadius; }
+    private float OrbitSpeed { get => visualsData.orbitSpeed;}
     private Queue<GameObject> dashCharges = new Queue<GameObject>();
     // Start is called before the first frame update
     void Start()
@@ -52,10 +53,10 @@ public class DashChargeManager : MonoBehaviour
     {
         for (int i = 0; i < dashCharges.Count; i++)
         {
-            var dest = new Vector3(orbitRadius * Mathf.Cos(i * 2 * Mathf.PI / dashCharges.Count), 0, orbitRadius * Mathf.Sin(i * 2 * Mathf.PI / dashCharges.Count));
+            var dest = new Vector3(OrbitRadius * Mathf.Cos(i * 2 * Mathf.PI / dashCharges.Count), 0, OrbitRadius * Mathf.Sin(i * 2 * Mathf.PI / dashCharges.Count));
             dashCharges.ElementAt(i).transform.localPosition = Vector3.Lerp(dashCharges.ElementAt(i).transform.localPosition, dest, 0.05f);
         }
         
-        transform.rotation *= Quaternion.AngleAxis(orbitSpeed*Time.deltaTime, transform.up); //not intented, but definitely good looking result
+        transform.rotation *= Quaternion.AngleAxis(OrbitSpeed*Time.deltaTime, transform.up); //not intented, but definitely good looking result
     }
 }
