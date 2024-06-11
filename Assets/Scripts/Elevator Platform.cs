@@ -9,6 +9,8 @@ public class ElevatorPlatform : MonoBehaviour
     [SerializeField] public bool exitElevator = false;
     [SerializeField] float doorOpeningTime = 1;
     [SerializeField] GameObject door;
+    public delegate void Finished();
+    public static event Finished OnFinish;
     private Vector3 initDoorPos;
     private Vector3 segmentExitPosition;
     private bool closed = false;
@@ -20,10 +22,27 @@ public class ElevatorPlatform : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<PlayerController>() != null & exitElevator &!closed)
+        
+        var player = other.GetComponent<PlayerController>();
+        if (player != null & exitElevator &!closed)
         {
             CloseElevator();
+            player.SendMessage("FadeOut");
+            player.SendMessage("LockMovement",doorOpeningTime);
+            StopCoroutine(FinishedCR());
+            StartCoroutine(FinishedCR());
         }
+    }
+
+    IEnumerator FinishedCR()
+    {
+        var timer = 0f;
+        while (timer < doorOpeningTime)
+        {
+            timer+= Time.deltaTime;
+            yield return null;
+        }
+        OnFinish?.Invoke();
     }
 
     //Send message target

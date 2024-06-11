@@ -1,9 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.ProBuilder;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 using static ActionItem;
 
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public float RespawnMovementLockoutTime { get => playerData.respawnMovementLockoutTime; }
     public float VerticalDashForceDecrease { get => playerData.verticalDashForceDecrease; }
     public float PostClimbSpeedBurstFactor { get => playerData.postClimbSpeedBurstFactor; }
+    [SerializeField] VisualsData visualData;
+    public float FadeTime { get => visualData.fadeTime; }
     //Timers
     private float jumpTimer = 0f;
     private float iFrameTimer = 0f;
@@ -88,6 +91,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Capsule collider, fullbody one")][SerializeField] CapsuleCollider col;
     [Tooltip("Sphere collider, for the feet")][SerializeField] SphereCollider sph;
     [Tooltip("Pause menu object")][SerializeField] GameObject pauseMenu;
+    [Tooltip("Fade in/out ppv")][SerializeField] PostProcessVolume ppv;
     [Header("Context Relevant Variables")]
     [Tooltip("Respawn position")][SerializeField] Vector3 respawnPosition;
     [Header("Physics/Rigidbody Variables - Preferably don't edit")]
@@ -105,6 +109,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        ppv.weight = 1;
         //make sure we initialize with something
         if (rb == null) { rb = GetComponent<Rigidbody>(); }
         if (cam == null) { cam = GetComponentInChildren<Camera>(); }
@@ -118,6 +123,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = InitHealth;
         Cursor.visible = isPaused;
         SnapSetRespawn();
+        FadeIn();
     }
 
 
@@ -172,7 +178,7 @@ public class PlayerController : MonoBehaviour
             {
                 Respawn();
             }
-            
+
         }
 
     }
@@ -634,6 +640,65 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
+    }
+
+    private void FadeIn()
+    {
+        StopCoroutine(FadeInCR());
+        StopCoroutine(FadeOutCR());
+        ppv.weight = 1;
+        StartCoroutine(FadeInCR());
+    }
+
+    IEnumerator FadeInCR()
+    {
+        float timer = 0f;
+        while (timer < FadeTime)
+        {
+            timer += Time.deltaTime;
+            ppv.weight = Mathf.Lerp(1, 0, timer / FadeTime);
+            yield return null;
+        }
+        ppv.weight = 0;
+    }
+
+    private void FadeOut()
+    {
+        StopCoroutine(FadeInCR());
+        StopCoroutine(FadeOutCR());
+        ppv.weight = 0;
+        StartCoroutine(FadeOutCR());
+    }
+
+    IEnumerator FadeOutCR()
+    {
+        float timer = 0f;
+        while (timer < FadeTime)
+        {
+            timer += Time.deltaTime;
+            ppv.weight = Mathf.Lerp(0, 1, timer / FadeTime);
+            yield return null;
+        }
+        ppv.weight = 1;
+    }
+
+    private void LockMovement(float duration)
+    {
+        StopCoroutine(LockMovementCR(duration));
+        StartCoroutine(LockMovementCR(duration));
+    }
+
+    IEnumerator LockMovementCR(float duration)
+    {
+        var timer = 0f;
+        var pin = transform.position;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            transform.position = pin;
+            rb.velocity = Vector3.zero;
+            yield return null;
+        }
     }
 }
 public struct DamageInfo
