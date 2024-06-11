@@ -113,6 +113,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        cam.fieldOfView = DataStore.Instance.FOV;
         ppv.weight = 1;
         //make sure we initialize with something
         if (rb == null) { rb = GetComponent<Rigidbody>(); }
@@ -172,7 +173,7 @@ public class PlayerController : MonoBehaviour
             {
                 ProcessActions();
             }
-            RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            RotateCamera(Input.GetAxis("Mouse X")*DataStore.Instance.Sensitivity, Input.GetAxis("Mouse Y")*DataStore.Instance.Sensitivity);
             UpdateInteractables();
             if (Input.GetButtonDown("Interact"))
             {

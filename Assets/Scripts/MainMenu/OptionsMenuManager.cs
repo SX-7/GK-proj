@@ -2,16 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class OptionsMenuManager : MonoBehaviour
 {
+    [Header("Vanity info")]
     [SerializeField] Camera cam;
     private List<RectTransform> menuElements;
     [SerializeField] float fadeSpeed = 10f;
+    [Header("Slider info")]
+    [SerializeField] Slider musicSlider;
+    [SerializeField] Slider sfxSlider;
+    [SerializeField] Slider fovSlider;
+    [SerializeField] Slider sensitivitySlider;
+    [Header("Mixers")]
+    [SerializeField] AudioMixer sfx;
+    [SerializeField] AudioMixer music;
     // Start is called before the first frame update
     void Start()
     {
         menuElements = GetComponentsInChildren<RectTransform>().Where((x) => x.GetComponent<OptionsMenuManager>() == null).ToList();
+        musicSlider.value = DataStore.Instance.Music;
+        fovSlider.value = DataStore.Instance.FOV;
+        sensitivitySlider.value = DataStore.Instance.Sensitivity;
+        sfxSlider.value = DataStore.Instance.SFX;
     }
 
     // Update is called once per frame
@@ -47,7 +62,7 @@ public class OptionsMenuManager : MonoBehaviour
             foreach (var item in menuElements)
             {
                 item.localScale = Vector3.Lerp(item.localScale, new Vector3(1, 1, 1), Time.deltaTime * fadeSpeed);
-            }       
+            }
             timed += Time.deltaTime;
             yield return null;
         }
@@ -81,8 +96,61 @@ public class OptionsMenuManager : MonoBehaviour
         }
     }
 
-    private void Cheese()
+    private void ResetMusic()
     {
-        Debug.Log("Cheese option");
+        musicSlider.value = DataStore.Instance.DefaultMusic;
+    }
+
+    private void ResetSFX()
+    {
+        sfxSlider.value = DataStore.Instance.DefaultSFX;
+    }
+
+    private void ResetFOV()
+    {
+        fovSlider.value = DataStore.Instance.DefaultFOV;
+    }
+
+    private void ResetSensitivity()
+    {
+        sensitivitySlider.value = DataStore.Instance.DefaultSensitivity;
+    }
+
+    private void ReadMusic()
+    {
+        DataStore.Instance.Music = musicSlider.value;
+        if (musicSlider.value < 1)
+        {
+            music.SetFloat("musicVolume", -80);
+        }
+        else
+        {
+            music.SetFloat("musicVolume", (musicSlider.value / 2) - 30);
+        }
+
+    }
+
+    private void ReadSFX()
+    {
+        DataStore.Instance.SFX = sfxSlider.value;
+        if (sfxSlider.value < 1)
+        {
+            sfx.SetFloat("sfxVolume", -80);
+        }
+        else
+        {
+            sfx.SetFloat("sfxVolume", (sfxSlider.value / 2) - 30);
+        }
+
+    }
+
+    private void ReadFOV()
+    {
+        DataStore.Instance.FOV = fovSlider.value;
+    }
+
+    private void ReadSensitivity()
+    {
+        DataStore.Instance.Sensitivity = sensitivitySlider.value;
     }
 }

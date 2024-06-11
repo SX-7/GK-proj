@@ -6324,7 +6324,7 @@ Transform:
   m_GameObject: {fileID: 7095748079867737851}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 67}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6421,8 +6421,8 @@ MonoBehaviour:
   visualData: {fileID: 11400000, guid: ede732abfcb5a904a89df6ec5a545940, type: 2}
   rb: {fileID: 8584989347442214125}
   cam: {fileID: 3738562707248907441}
-  col: {fileID: 0}
-  sph: {fileID: 0}
+  col: {fileID: 7088481646072574174}
+  sph: {fileID: 2400883414546992317}
   pauseMenu: {fileID: 2381316104671450709}
   ppv: {fileID: 4153217830984390554}
   respawnPosition: {x: 0, y: 0, z: 0}
@@ -7471,7 +7471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualData: {fileID: 11400000, guid: ede732abfcb5a904a89df6ec5a545940, type: 2}
-  downDistance: 0.3
+  downDistance: 0.5
 --- !u!4 &6563138363036092198 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9042fbdeffc60394a9b68286cefff12e, type: 3}

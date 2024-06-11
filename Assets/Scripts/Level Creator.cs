@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class LevelCreator : MonoBehaviour
 {
     [Header("Externals")]
-    [SerializeField] string generatableSceneName = "Generatable Level";
     [SerializeField] PlayerController player;
     [SerializeField] ElevatorPlatform platform;
     [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
