@@ -13,6 +13,8 @@ public class SceneSelectManager : MonoBehaviour
     private List<Transform> menuButtons;
     [SerializeField] Scrollbar scrl;
     [SerializeField] GameObject buttonPrefab;
+    [Header("Enable if you're trying to access the old functionality")]
+    [SerializeField] bool doScenesList;
     [Tooltip("Only put scenes here, otherwise it might behave unexpectedly")][SerializeField] string[] scenesList;
     [SerializeField] float fadeSpeed = 10f;
     private float scrollRange = 0;

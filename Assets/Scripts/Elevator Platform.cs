@@ -27,6 +27,7 @@ public class ElevatorPlatform : MonoBehaviour
         if (player != null & exitElevator &!closed)
         {
             CloseElevator();
+            exitElevator = false;
             player.SendMessage("FadeOut");
             player.SendMessage("LockMovement",doorOpeningTime);
             StopCoroutine(FinishedCR());

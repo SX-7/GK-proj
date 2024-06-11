@@ -8,8 +8,13 @@ using UnityEngine.SceneManagement;
 
 public class SceneButton : MonoBehaviour, IPointerClickHandler
 {
-
+    [SerializeField] string scene;
     private string _scene;
+
+    private void Awake()
+    {
+        if (scene != null) { _scene = scene; }
+    }
     public void Init(string scene, float offset)
     {
         _scene = scene;

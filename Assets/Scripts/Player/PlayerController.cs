@@ -57,12 +57,16 @@ public class PlayerController : MonoBehaviour
     private float capsuleColliderInitHeight;
     private Vector3 capsuleColliderInitCenter;
     private Vector3 sphereColliderInitCenter;
+    public static int Score;
     //State trackers
     private bool crouching = false;
     private bool dashing = false;
     private bool slowing = false;
     private bool isPaused = false;
     private bool climbing = false;
+    private bool completeStasis = false;
+    private bool dead = false;
+
     //Delegates/Events
     public delegate void ReceiveDamageAction(DamageInfo damageInfo);
     public static event ReceiveDamageAction OnReceiveDamage;
@@ -158,7 +162,7 @@ public class PlayerController : MonoBehaviour
             pauseMenu.SetActive(isPaused);
             Cursor.visible = isPaused;
         }
-        if (!isPaused)
+        if (!isPaused & !dead)
         {
             DoSlowMotion();
             UpdateTimers();
@@ -174,10 +178,10 @@ public class PlayerController : MonoBehaviour
             {
                 AttemptInteract();
             }
-            if (Input.GetButtonDown("Respawn"))
-            {
-                Respawn();
-            }
+            //if (Input.GetButtonDown("Respawn"))
+            //{
+            //    Respawn();
+            //}
 
         }
 
@@ -314,8 +318,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Respawn();
-            currentHealth = MaxHealth;
+            Death();
         }
         else if (damage.forceRespawn)
         {
@@ -328,6 +331,7 @@ public class PlayerController : MonoBehaviour
     {
         if (health < 0)
         {
+            //ez full heal
             currentHealth = MaxHealth;
         }
         else
@@ -630,13 +634,25 @@ public class PlayerController : MonoBehaviour
     private void Exit()
     {
         UnPause();
-        StartCoroutine(ExitCR());
+        StartCoroutine(ExitCR(0f));
     }
-    IEnumerator ExitCR()
+
+    private void GracefulExit()
     {
+        UnPause();
+        LockMovement(1.5f);
+        StartCoroutine(FadeOutCR(1f));
+        StartCoroutine(ExitCR(1.1f));
+        completeStasis = true;
+        dead = true;
+    }
+    IEnumerator ExitCR(float min_time)
+    {
+        var timer = 0f;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
-        while (!asyncLoad.isDone)
+        while (!asyncLoad.isDone || timer<min_time)
         {
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
@@ -644,19 +660,19 @@ public class PlayerController : MonoBehaviour
 
     private void FadeIn()
     {
-        StopCoroutine(FadeInCR());
-        StopCoroutine(FadeOutCR());
+        StopCoroutine(FadeInCR(FadeTime));
+        StopCoroutine(FadeOutCR(FadeTime));
         ppv.weight = 1;
-        StartCoroutine(FadeInCR());
+        StartCoroutine(FadeInCR(FadeTime));
     }
 
-    IEnumerator FadeInCR()
+    IEnumerator FadeInCR(float fade_time)
     {
         float timer = 0f;
-        while (timer < FadeTime)
+        while (timer < fade_time)
         {
             timer += Time.deltaTime;
-            ppv.weight = Mathf.Lerp(1, 0, timer / FadeTime);
+            ppv.weight = Mathf.Lerp(1, 0, timer / fade_time);
             yield return null;
         }
         ppv.weight = 0;
@@ -664,19 +680,19 @@ public class PlayerController : MonoBehaviour
 
     private void FadeOut()
     {
-        StopCoroutine(FadeInCR());
-        StopCoroutine(FadeOutCR());
+        StopCoroutine(FadeInCR(FadeTime));
+        StopCoroutine(FadeOutCR(FadeTime));
         ppv.weight = 0;
-        StartCoroutine(FadeOutCR());
+        StartCoroutine(FadeOutCR(FadeTime));
     }
 
-    IEnumerator FadeOutCR()
+    IEnumerator FadeOutCR(float fade_time)
     {
         float timer = 0f;
-        while (timer < FadeTime)
+        while (timer < fade_time)
         {
             timer += Time.deltaTime;
-            ppv.weight = Mathf.Lerp(0, 1, timer / FadeTime);
+            ppv.weight = Mathf.Lerp(0, 1, timer / fade_time);
             yield return null;
         }
         ppv.weight = 1;
@@ -688,7 +704,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(LockMovementCR(duration));
     }
 
-    IEnumerator LockMovementCR(float duration)
+    public IEnumerator LockMovementCR(float duration)
     {
         var timer = 0f;
         var pin = transform.position;
@@ -699,6 +715,39 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector3.zero;
             yield return null;
         }
+    }
+
+    private void Death()
+    {
+        if (!completeStasis)
+        {
+            FadeOut();
+            LockMovement(FadeTime);
+            completeStasis = true;
+            StartCoroutine(DeathCR());
+        }
+    }
+
+    IEnumerator DeathCR()
+    {
+        var timer = 0f;
+        while(timer< FadeTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        StartCoroutine(DeathSceneCR());
+    }
+
+    //TODO: no magic variable here
+    IEnumerator DeathSceneCR()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Death Scene");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Death Scene"));
     }
 }
 public struct DamageInfo

@@ -1,34 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class LevelCreator : MonoBehaviour
 {
     [Header("Externals")]
+    [SerializeField] string generatableSceneName = "Generatable Level";
     [SerializeField] PlayerController player;
     [SerializeField] ElevatorPlatform platform;
     [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
     private List<LevelSegment> Segments { get => segmentsToChooseFrom; }
     [SerializeField] int levelCount = 3;
     [SerializeField] int segmentCountPerLevel = 10;
-    private int SegmentCount {  get => segmentCountPerLevel; }
+    private int SegmentCount { get => segmentCountPerLevel; }
     [Header("If you put anything here, it'll use these segment indexes, in order, across stages, to create levels.")]
     [SerializeField] List<int> segmentIndexes = new List<int>();
-    
     private List<LevelSegment> instantiatedSegments = new();
     private PlayerController instantiatedPlayer;
     private ElevatorPlatform startPlatform;
     private ElevatorPlatform endPlatform;
     private int currentLevel = 0;
+    private Vector3 baseOffset;
 
-    
+
     void Awake()
     {
-        Rebuild();
         ElevatorPlatform.OnFinish += Finished;
     }
 
+
     private void OnEnable()
     {
+
+        //very annoying unity thing
+        PlayerController.Score = 0;
+        currentLevel = 0;
+        baseOffset = transform.position;
+        Rebuild();
+        if (instantiatedPlayer == null)
+        {
+            instantiatedPlayer = Instantiate(player, startPlatform.expectedPlayerPosition.position, Quaternion.LookRotation(Vector3.forward));
+        }
         //weird but needed idk
         ElevatorPlatform.OnFinish -= Finished;
         ElevatorPlatform.OnFinish += Finished;
@@ -42,10 +54,14 @@ public class LevelCreator : MonoBehaviour
     void Finished()
     {
         currentLevel++;
-        if (currentLevel < levelCount) {
+        Debug.Log(currentLevel);
+        if (currentLevel < levelCount)
+        {
             Delete();
             Rebuild();
-        } else
+            instantiatedPlayer.SendMessage("FadeIn");
+        }
+        else
         {
             Delete();
         }
@@ -64,8 +80,12 @@ public class LevelCreator : MonoBehaviour
 
     void Rebuild()
     {
-        startPlatform = Instantiate(platform);
-        var next_position = platform.transform.TransformPoint(platform.SegmentExitPosition);
+        if (baseOffset == null)
+        {
+            baseOffset = transform.position;
+        }
+        startPlatform = Instantiate(platform, baseOffset-platform.expectedPlayerPosition.position, Quaternion.identity);
+        var next_position = startPlatform.transform.TransformPoint(startPlatform.SegmentExitPosition);
         for (int i = 0; i < SegmentCount; i++)
         {
             LevelSegment segment_to_add;
@@ -83,11 +103,6 @@ public class LevelCreator : MonoBehaviour
         }
         endPlatform = Instantiate(platform, next_position - platform.SegmentExitPosition, Quaternion.LookRotation(Vector3.back));
         endPlatform.exitElevator = true;
-        if(instantiatedPlayer == null)
-        {
-            instantiatedPlayer = Instantiate(player, startPlatform.expectedPlayerPosition.position, Quaternion.LookRotation(Vector3.forward));
-        }
-        instantiatedPlayer.SendMessage("FadeIn");
-        instantiatedPlayer.transform.position = startPlatform.expectedPlayerPosition.position;
+        baseOffset = endPlatform.expectedPlayerPosition.position;
     }
 }

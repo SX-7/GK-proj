@@ -39,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3003860272434449127}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2f7c3ab7ba0cd74cb2bf0bbc3d94dc6, type: 3}
   m_Name: 
@@ -48,6 +48,7 @@ MonoBehaviour:
   platform: {fileID: 2147373178461599717, guid: 9615dd8df3d72b642b248b99965b1f27, type: 3}
   segmentsToChooseFrom:
   - {fileID: 5293275950873261989, guid: d15bd546f78d785409339493397db20d, type: 3}
+  - {fileID: 5293275950873261989, guid: ef10e7b1b4d4ca249a5d2b00fdcbc387, type: 3}
   levelCount: 3
   segmentCountPerLevel: 5
   segmentIndexes: 

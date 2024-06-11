@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d08a40701207f44a800c9823e2e67b, type: 3}
   m_Name: Basic Player Data
   m_EditorClassIdentifier: 
-  maxSpeed: 10
+  maxSpeed: 20
   jumpHeight: 10
   jumpCooldown: 0.1
   climbingTime: 0.3
