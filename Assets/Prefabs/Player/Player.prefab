@@ -6307,6 +6307,7 @@ GameObject:
   - component: {fileID: 2183568438250555963}
   - component: {fileID: 2831771202787326415}
   - component: {fileID: 2400883414546992317}
+  - component: {fileID: 4153217830984390554}
   m_Layer: 2
   m_Name: Player
   m_TagString: Untagged
@@ -6417,11 +6418,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 9d1769256f6a4814facb40351aca3501, type: 2}
+  visualData: {fileID: 11400000, guid: ede732abfcb5a904a89df6ec5a545940, type: 2}
   rb: {fileID: 8584989347442214125}
   cam: {fileID: 3738562707248907441}
   col: {fileID: 0}
   sph: {fileID: 0}
   pauseMenu: {fileID: 2381316104671450709}
+  ppv: {fileID: 4153217830984390554}
   respawnPosition: {x: 0, y: 0, z: 0}
   crouchColliderScale: 0.5
   capsuleColliderCrouchCenter: {x: 0, y: 0.6, z: 0}
@@ -6450,6 +6453,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &4153217830984390554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7095748079867737851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: df7b2abd601cc8e469b64df6ef960d2a, type: 2}
+  isGlobal: 1
+  blendDistance: 0
+  weight: 0
+  priority: 0
 --- !u!1 &7118448913625631169
 GameObject:
   m_ObjectHideFlags: 0

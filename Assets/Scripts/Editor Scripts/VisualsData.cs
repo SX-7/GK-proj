@@ -46,4 +46,8 @@ public class VisualsData : ScriptableObject
     [Range (0f, 1f)]
     public float slowMoChromaticEffectScale;
     public float slowMoEffectRampTime;
+
+    [Header("Misc")]
+    [Min(0f)]
+    public float fadeTime;
 }

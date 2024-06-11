@@ -59,3 +59,4 @@ MonoBehaviour:
   minimumSizeScale: 0.7
   slowMoChromaticEffectScale: 0.5
   slowMoEffectRampTime: 0.1
+  fadeTime: 1
