@@ -12,6 +12,8 @@ public class Bullet : MonoBehaviour
     private Vector3 direction;
     private PlayerController playerController;
 
+    public GameObject impactEffect;
+
     public void Seek(Transform _target)
     {
         target = _target;
@@ -69,6 +71,7 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("HIT STH: " + collision.gameObject.name);
+        MakeHitTargetEffect();
         TakeDmgToPlayer(collision);
         Destroy(gameObject);
     }
@@ -79,5 +82,11 @@ public class Bullet : MonoBehaviour
         {
             collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(10, false), SendMessageOptions.DontRequireReceiver);
         }
+    }
+
+    void MakeHitTargetEffect()
+    {
+        GameObject effectInstance = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
+        Destroy(effectInstance, 2f);
     }
 }
