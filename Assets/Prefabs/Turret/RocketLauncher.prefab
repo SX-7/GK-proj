@@ -92,9 +92,9 @@ Transform:
   m_GameObject: {fileID: 3362934440403623637}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.737, y: 6.066, z: 4.176}
-  m_LocalScale: {x: 1, y: 0.43144655, z: 0.76922214}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 0.8628931, z: 1.5384443}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 336066222476972450}
   m_Father: {fileID: 0}
@@ -299,6 +299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 0.3
+  useLaser: 0
+  lineRenderer: {fileID: 0}
   bulletPrefab: {fileID: 2233935432442080750, guid: 95c70be6cdae98d44ac7194674d3d097, type: 3}
   target: {fileID: 6908119833356475733}
   firePoint: {fileID: 2751677249561871358}
@@ -315,6 +317,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 0.3
+  useLaser: 0
+  lineRenderer: {fileID: 0}
   bulletPrefab: {fileID: 2233935432442080750, guid: 95c70be6cdae98d44ac7194674d3d097, type: 3}
   target: {fileID: 1219531534548610435}
   firePoint: {fileID: 2472446955178525453}

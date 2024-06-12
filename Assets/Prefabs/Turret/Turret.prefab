@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 1
+  useLaser: 0
+  lineRenderer: {fileID: 0}
   bulletPrefab: {fileID: 6233865855647164195, guid: 98e7615e3e3f1b8438892ebe96d2ce70, type: 3}
   target: {fileID: 985182412838092108}
   firePoint: {fileID: 8537481864883023416}
@@ -540,8 +542,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1437922579286803039}
   m_Father: {fileID: 0}

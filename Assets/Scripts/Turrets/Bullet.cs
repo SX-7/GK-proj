@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     [Header(("Attributes"))]
     private Transform target;
     public float speed = 70f;
+    public float explosionRadius = 0f;
     public float lifetime = 5f;
     public float damageToPlayer = 0f;
     private float lifeTimer;
@@ -81,9 +82,29 @@ public class Bullet : MonoBehaviour
 
     private void TakeDmgToPlayer(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (explosionRadius > 0f)
         {
-            collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(damageToPlayer, false), SendMessageOptions.DontRequireReceiver);
+            Explode();
+        }
+        else
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(damageToPlayer, false), SendMessageOptions.DontRequireReceiver);
+            }
+        }
+
+    }
+
+    void Explode()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Player")
+            {
+                collider.gameObject.SendMessage("ReceiveDamage", new DamageInfo(damageToPlayer, false), SendMessageOptions.DontRequireReceiver);
+            }
         }
     }
 

@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    [Header("Attributes")]
+
+    
+    
+    [Header("Use Bullets")]
     public float fireRate = 1f;
     private float fireCountdown = 0f;
 
-    private Animator animator;
+    [Header("Use Laser")] 
+    public bool useLaser = false;
+
+    public LineRenderer lineRenderer;
+    
+    [Header("Unity Setup")]
 
     public GameObject bulletPrefab;
 
@@ -17,21 +25,32 @@ public class Turret : MonoBehaviour
     public Transform firePoint;
     void Start()
     {
-        animator = GetComponent<Animator>();
+
     }
     
     void Update()
     {
-        
+        if (useLaser)
+        {
+            Laser();
+        }
+
         if (fireCountdown <= 0f)
         {
             Shoot();
             fireCountdown = 1f / fireRate;
         }
-        
+    
         fireCountdown -= Time.deltaTime;
         
     }
+
+    void Laser()
+    {
+        lineRenderer.SetPosition(0, firePoint.position);
+        lineRenderer.SetPosition(1, target.position);
+    }
+
     
 
     void Shoot()
