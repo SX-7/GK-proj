@@ -100,7 +100,7 @@ public class LevelCreator : MonoBehaviour
             }
 
             startPlatform = Instantiate(platform, baseOffset - platform.expectedPlayerPosition.position, Quaternion.identity);
-            var next_position = startPlatform.transform.TransformPoint(startPlatform.SegmentExitPosition);
+            var next_position = startPlatform.transform.TransformPoint(startPlatform.segmentExitPosition);
             var segment_to_add = BossSegments[Random.Range(0, BossSegments.Count)];    
             var boss_segment = Instantiate(segment_to_add, next_position - segment_to_add.segmentEntryPosition, segment_to_add.transform.rotation);
             instantiatedPlayer.SendMessage("FadeIn");
@@ -134,7 +134,7 @@ public class LevelCreator : MonoBehaviour
             baseOffset = transform.position;
         }
         startPlatform = Instantiate(platform, baseOffset-platform.expectedPlayerPosition.position, Quaternion.identity);
-        var next_position = startPlatform.transform.TransformPoint(startPlatform.SegmentExitPosition);
+        var next_position = startPlatform.transform.TransformPoint(startPlatform.segmentExitPosition);
 
         var end_i = 0;
         if (manual)
@@ -161,7 +161,7 @@ public class LevelCreator : MonoBehaviour
             instantiatedSegments.Add(Instantiate(segment_to_add, next_position - segment_to_add.segmentEntryPosition, segment_to_add.transform.rotation));
             next_position = next_position - segment_to_add.segmentEntryPosition + segment_to_add.segmentExitPosition;
         }
-        endPlatform = Instantiate(platform, next_position - platform.SegmentExitPosition, Quaternion.LookRotation(Vector3.back));
+        endPlatform = Instantiate(platform, next_position + platform.segmentExitPosition, Quaternion.LookRotation(Vector3.back));
         endPlatform.exitElevator = true;
         baseOffset = endPlatform.expectedPlayerPosition.position;
         

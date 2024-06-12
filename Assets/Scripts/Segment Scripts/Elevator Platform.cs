@@ -14,9 +14,8 @@ public class ElevatorPlatform : MonoBehaviour
     public delegate void Finished();
     public static event Finished OnFinish;
     private Vector3 initDoorPos;
-    private Vector3 segmentExitPosition;
+    public Vector3 segmentExitPosition;
     private bool closed = false;
-    public Vector3 SegmentExitPosition { get { return segmentExitPosition; } set { segmentExitPosition = SegmentExitPosition; } }
     private void Start()
     {
         initDoorPos = door.transform.position;
@@ -97,13 +96,13 @@ public class DrawElevatorSegmentEnd : Editor
         ElevatorPlatform myObj = (ElevatorPlatform)target;
 
         Handles.color = Color.red;
-        Handles.DrawWireCube(myObj.transform.TransformPoint(myObj.SegmentExitPosition), new Vector3(10, 10, 0));
+        Handles.DrawWireCube(myObj.transform.TransformPoint(myObj.segmentExitPosition), new Vector3(10, 10, 0));
         EditorGUI.BeginChangeCheck();
-        Vector3 new_exit_pos = Handles.PositionHandle(myObj.transform.TransformPoint(myObj.SegmentExitPosition), Quaternion.LookRotation(myObj.transform.forward, Vector3.up)) - myObj.transform.position;
+        Vector3 new_exit_pos = Handles.PositionHandle(myObj.transform.TransformPoint(myObj.segmentExitPosition), Quaternion.LookRotation(myObj.transform.forward, Vector3.up)) - myObj.transform.position;
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(myObj, "Change Elevator Segment End Position");
-            myObj.SegmentExitPosition = new_exit_pos;
+            myObj.segmentExitPosition = new_exit_pos;
         }
 
     }
