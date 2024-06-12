@@ -4,7 +4,7 @@
 
 # Features:
 
-- - Somewhat fleshed out movement system!
+- Somewhat fleshed out movement system!
 - Procedurally generated levels!
 - Platforming fun!
 - The Skull™️!
