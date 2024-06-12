@@ -198,6 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 21009449}
 --- !u!114 &21009447
 MonoBehaviour:
@@ -598,6 +599,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 307070930}
 --- !u!114 &307070928
 MonoBehaviour:
@@ -909,6 +911,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 371061805}
 --- !u!65 &371061805
 BoxCollider:
@@ -1045,6 +1048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 495097214}
 --- !u!65 &495097214
 BoxCollider:
@@ -1357,6 +1361,7 @@ MonoBehaviour:
   hurtArea: {fileID: 507450345}
   damage: 0
   forcesRespawn: 1
+  literallyThrowThePlayerOutToMainMenu: 0
 --- !u!43 &642296314
 Mesh:
   m_ObjectHideFlags: 0
@@ -1599,6 +1604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.1
+  onlyUp: 0
   bc: {fileID: 644151190}
 --- !u!114 &644151189
 MonoBehaviour:
@@ -1749,6 +1755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 676341387}
 --- !u!65 &676341387
 BoxCollider:
@@ -1870,6 +1877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 701638780}
 --- !u!65 &701638780
 BoxCollider:
@@ -2313,6 +2321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 795936808}
 --- !u!114 &795936806
 MonoBehaviour:
@@ -2491,6 +2500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 827716102}
 --- !u!114 &827716100
 MonoBehaviour:
@@ -2725,6 +2735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 830016950}
 --- !u!1 &854594363
 GameObject:
@@ -2775,6 +2786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 854594366}
 --- !u!65 &854594366
 BoxCollider:
@@ -2928,6 +2940,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 859603551}
 --- !u!114 &859603549
 MonoBehaviour:
@@ -3162,6 +3175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 876954721}
 --- !u!1 &882886047
 GameObject:
@@ -3242,6 +3256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 882886053}
 --- !u!114 &882886051
 MonoBehaviour:
@@ -3586,6 +3601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 942293773}
 --- !u!114 &942293771
 MonoBehaviour:
@@ -3764,6 +3780,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1015812359}
 --- !u!114 &1015812357
 MonoBehaviour:
@@ -3942,6 +3959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1036921111}
 --- !u!114 &1036921109
 MonoBehaviour:
@@ -4088,6 +4106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1043839618}
 --- !u!65 &1043839618
 BoxCollider:
@@ -4391,6 +4410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 1109246997}
 --- !u!65 &1109246997
 BoxCollider:
@@ -4544,6 +4564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1181709254}
 --- !u!114 &1181709252
 MonoBehaviour:
@@ -4722,6 +4743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1255731600}
 --- !u!114 &1255731598
 MonoBehaviour:
@@ -4870,6 +4892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 1392963591}
 --- !u!65 &1392963591
 BoxCollider:
@@ -5080,6 +5103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1402106035}
 --- !u!114 &1402106040
 MonoBehaviour:
@@ -5143,6 +5167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 1452433216}
 --- !u!65 &1452433216
 BoxCollider:
@@ -5296,6 +5321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1499782472}
 --- !u!114 &1499782470
 MonoBehaviour:
@@ -5474,6 +5500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1568290855}
 --- !u!114 &1568290853
 MonoBehaviour:
@@ -5652,6 +5679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1637234753}
 --- !u!114 &1637234751
 MonoBehaviour:
@@ -5800,6 +5828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 1707575255}
 --- !u!65 &1707575255
 BoxCollider:
@@ -5928,6 +5957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
+  onlyUp: 0
   bc: {fileID: 1800457113}
 --- !u!65 &1800457113
 BoxCollider:
@@ -6246,6 +6276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1872331855}
 --- !u!114 &1872331853
 MonoBehaviour:
@@ -6589,6 +6620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 1927598673}
 --- !u!114 &1927598671
 MonoBehaviour:
@@ -6722,6 +6754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 2059729958}
 --- !u!65 &2059729958
 BoxCollider:
@@ -6890,6 +6923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 2129915482}
 --- !u!114 &2129915480
 MonoBehaviour:
@@ -7068,6 +7102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 2135752742}
 --- !u!114 &2135752740
 MonoBehaviour:
@@ -7246,6 +7281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.125
+  onlyUp: 0
   bc: {fileID: 2146875933}
 --- !u!114 &2146875931
 MonoBehaviour:
@@ -7345,6 +7381,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146875927}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1304284780448157062
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5227707684645523740, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_Name
+      value: ClimbablePlatformsGroup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.497
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -975.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775103015904742823, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
 --- !u!1001 &1304422707181142037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7674,63 +7767,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 737521e9d497c574993d8d00960997da, type: 3}
---- !u!1001 &6698834054014469558
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -4.497
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.71
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -975.44
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1752949002489192541, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3042742120911780840, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
-      propertyPath: m_Name
-      value: ClimbablePlatformsGroup
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 646436e4aa3c7424a9dff76d525fdfc9, type: 3}
 --- !u!1001 &7895093208838995122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7862,7 +7898,7 @@ SceneRoots:
   - {fileID: 495097217}
   - {fileID: 371061808}
   - {fileID: 701638783}
-  - {fileID: 6698834054014469558}
+  - {fileID: 1304284780448157062}
   - {fileID: 67086448}
   - {fileID: 717317516}
   - {fileID: 940434504}
