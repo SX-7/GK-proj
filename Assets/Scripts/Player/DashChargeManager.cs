@@ -8,12 +8,14 @@ public class DashChargeManager : MonoBehaviour
     [SerializeField] GameObject dashCharge;
     [SerializeField] PlayerController playerController;
     [SerializeField] VisualsData visualsData;
+    [SerializeField] AudioSource audioSource;
     private float OrbitRadius { get => visualsData.orbitRadius; }
     private float OrbitSpeed { get => visualsData.orbitSpeed;}
     private Queue<GameObject> dashCharges = new Queue<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
+        if(audioSource == null) { audioSource = GetComponent<AudioSource>(); }
         if (dashCharge == null) { throw new UnassignedReferenceException("Dash Charge prefab was not slotted"); }
         if (playerController == null) { throw new UnassignedReferenceException("Player was not connected"); }
     }
@@ -36,17 +38,23 @@ public class DashChargeManager : MonoBehaviour
         var target = dashCharges.Dequeue();
         target.BroadcastMessage("DeathBurst");
         Destroy(target,1f);
+        audioSource.pitch = 1f;
+        audioSource.Play();
     }
 
     private void OnDashRestore(int dashCount)
     {
         dashCharges.Enqueue(Instantiate(dashCharge, transform));
+        audioSource.pitch = 2f;
+        audioSource.Play();
     }
 
     private void OnFire(Vector3 target, float damage)
     {
         var sacrifice = dashCharges.Dequeue();
         sacrifice.GetComponent<DashCharge>().Kamikaze(target, damage);
+        audioSource.pitch = 1f;
+        audioSource.Play();
     }
     // Update is called once per frame
     void Update()

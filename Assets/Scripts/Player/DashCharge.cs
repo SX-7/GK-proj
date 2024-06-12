@@ -73,6 +73,7 @@ public class DashCharge : MonoBehaviour
 
     private void Explode()
     {
+        GetComponent<AudioSource>().Play();
         StopAllCoroutines();
         pExplode.Emit(100);
         var main = pSys.emission;
