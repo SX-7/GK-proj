@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public float RespawnMovementLockoutTime { get => playerData.respawnMovementLockoutTime; }
     public float VerticalDashForceDecrease { get => playerData.verticalDashForceDecrease; }
     public float PostClimbSpeedBurstFactor { get => playerData.postClimbSpeedBurstFactor; }
+    public float StartingScore { get => playerData.startingScore; }
+    public float ScoreHalfTime { get => playerData.scoreHalfTime; }
     [SerializeField] VisualsData visualData;
     public float FadeTime { get => visualData.fadeTime; }
     //Timers
@@ -57,7 +59,8 @@ public class PlayerController : MonoBehaviour
     private float capsuleColliderInitHeight;
     private Vector3 capsuleColliderInitCenter;
     private Vector3 sphereColliderInitCenter;
-    public static int Score;
+    public static float Score;
+    public static bool Won = false;
     //State trackers
     private bool crouching = false;
     private bool dashing = false;
@@ -196,6 +199,7 @@ public class PlayerController : MonoBehaviour
             //    Respawn();
             //}
 
+            
         }
 
     }

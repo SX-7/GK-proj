@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 public class LevelCreator : MonoBehaviour
 {
     [Header("Externals")]
@@ -39,12 +40,15 @@ public class LevelCreator : MonoBehaviour
         ElevatorPlatform.OnFinishEnter += EarlyFinish;
     }
 
+    private void Update()
+    {
+        PlayerController.Score = instantiatedPlayer.StartingScore * Mathf.Pow(1f / 2f, Time.timeSinceLevelLoad / instantiatedPlayer.ScoreHalfTime);
+    }
 
     private void OnEnable()
     {
 
         //very annoying unity thing
-        PlayerController.Score = 0;
         currentLevel = 0;
         baseOffset = transform.position;
         Rebuild();

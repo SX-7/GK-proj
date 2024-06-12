@@ -20,10 +20,15 @@ public class ScoreBoard : MonoBehaviour
     {
         var p_normalised_pos = new Vector3(player.transform.position.x, 0 ,player.transform.position.z);
         transform.rotation = Quaternion.LookRotation(normalisedPos - p_normalised_pos);
+        if (!PlayerController.Won)
+        {
+            SetScore(Random.Range(-10000,-1000));
+            GetComponent<AudioSource>().pitch = 0.5f;
+        }
     }
 
-    void SetScore(int score)
+    void SetScore(float score)
     {
-        GetComponentInChildren<TextMeshProUGUI>().text = "Score: " + score.ToString();
+        GetComponentInChildren<TextMeshProUGUI>().text = "Score: " + ((int)score).ToString();
     }
 }
