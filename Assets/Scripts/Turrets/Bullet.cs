@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [Header(("Attributes"))]
     private Transform target;
     public float speed = 70f;
     public float lifetime = 5f;
+    public float damageToPlayer = 0f;
     private float lifeTimer;
     private Vector3 direction;
     private PlayerController playerController;
 
     public GameObject impactEffect;
+    public GameObject flyingEffect;
 
     public void Seek(Transform _target)
     {
@@ -47,7 +50,7 @@ public class Bullet : MonoBehaviour
         }
 
         CountLifetime();
-
+        MakeFlyingEffect();
         Vector3 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
         transform.Translate(direction * distanceThisFrame, Space.World);
@@ -80,7 +83,16 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(10, false), SendMessageOptions.DontRequireReceiver);
+            collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(damageToPlayer, false), SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    void MakeFlyingEffect()
+    {
+        if (flyingEffect != null)
+        {
+            GameObject effectInstance = (GameObject)Instantiate(flyingEffect, transform.position, transform.rotation);
+            Destroy(effectInstance, 2f);
         }
     }
 
