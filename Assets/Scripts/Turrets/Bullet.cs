@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     public float lifetime = 5f;
     private float lifeTimer;
     private Vector3 direction;
+    private PlayerController playerController;
 
     public void Seek(Transform _target)
     {
@@ -19,6 +20,21 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         lifeTimer = lifetime;
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
+        {
+            playerController = playerObject.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                Debug.Log("FIND PLAYER COMPONENT");
+            }
+            else
+            {
+                Debug.LogError("CANT FIND PLAYER COMPONENT");
+            }
+        }
+        
+        
     }
     void Update()
     {
@@ -34,20 +50,10 @@ public class Bullet : MonoBehaviour
         float distanceThisFrame = speed * Time.deltaTime;
         transform.Translate(direction * distanceThisFrame, Space.World);
 
-        if (dir.magnitude <= distanceThisFrame)
-        {
-            HitTarget();
-            return;
-        }
-        
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
     }
 
-    void HitTarget()
-    {
-        Debug.Log("HIT STH");
-        Destroy(gameObject);
-    }
+
 
     void CountLifetime()
     {
@@ -63,7 +69,15 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("HIT STH: " + collision.gameObject.name);
-
+        TakeDmgToPlayer(collision);
         Destroy(gameObject);
+    }
+
+    private void TakeDmgToPlayer(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.SendMessage("ReceiveDamage", new DamageInfo(10, false), SendMessageOptions.DontRequireReceiver);
+        }
     }
 }
