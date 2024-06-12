@@ -14669,6 +14669,15 @@ MonoBehaviour:
   lig: {fileID: 6154394563414409273}
   col: {fileID: 368374900228601296}
   tra: {fileID: 4959126860101287019}
+  deathParticleCount: 25
+  kamikazeVelocity: 20
+  kamikazeLightRangeIncrease: 5
+  kamikazeLightIntensityIncrease: 5
+  damageRadius: 2
+  knockbackRadius: 2
+  knockbackStrength: 10
+  initDuration: 0.2
+  initParticlecount: 50
 --- !u!135 &368374900228601296
 SphereCollider:
   m_ObjectHideFlags: 0

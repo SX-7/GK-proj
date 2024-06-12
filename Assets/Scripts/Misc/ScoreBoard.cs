@@ -20,6 +20,10 @@ public class ScoreBoard : MonoBehaviour
     {
         var p_normalised_pos = new Vector3(player.transform.position.x, 0 ,player.transform.position.z);
         transform.rotation = Quaternion.LookRotation(normalisedPos - p_normalised_pos);
+        if (!PlayerController.Won)
+        {
+            SetScore(Random.Range(-10000,-1000));
+        }
     }
 
     void SetScore(int score)
