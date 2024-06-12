@@ -26,8 +26,8 @@ public class ScoreBoard : MonoBehaviour
         }
     }
 
-    void SetScore(int score)
+    void SetScore(float score)
     {
-        GetComponentInChildren<TextMeshProUGUI>().text = "Score: " + score.ToString();
+        GetComponentInChildren<TextMeshProUGUI>().text = "Score: " + ((int)score).ToString();
     }
 }

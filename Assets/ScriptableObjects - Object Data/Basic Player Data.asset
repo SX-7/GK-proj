@@ -33,3 +33,5 @@ MonoBehaviour:
   coyoteJumpTime: 0.12
   maxInteractDistance: 2
   respawnMovementLockoutTime: 0.1
+  startingScore: 10000
+  scoreHalfTime: 10

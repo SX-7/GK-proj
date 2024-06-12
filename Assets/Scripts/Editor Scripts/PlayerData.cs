@@ -69,4 +69,8 @@ public class PlayerData : ScriptableObject
     public float maxInteractDistance;
     [Min(0f)]
     public float respawnMovementLockoutTime;
+    [Min(0f)]
+    public float startingScore;
+    [Min(0.1f)]
+    public float scoreHalfTime;
 }
