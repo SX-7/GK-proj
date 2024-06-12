@@ -23,6 +23,7 @@ public class ScoreBoard : MonoBehaviour
         if (!PlayerController.Won)
         {
             SetScore(Random.Range(-10000,-1000));
+            GetComponent<AudioSource>().pitch = 0.5f;
         }
     }
 
