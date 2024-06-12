@@ -49,6 +49,7 @@ public class MovingPlatform : MonoBehaviour
         // Attach the player to the platform on collision
         if (collision.gameObject == player)
         {
+            Debug.Log("Player entered platform");
             playerOffset = playerTransform.position - transform.position;
             playerTransform.SetParent(transform);
 
@@ -66,6 +67,7 @@ public class MovingPlatform : MonoBehaviour
         // Detach the player from the platform when they exit the collision
         if (collision.gameObject == player)
         {
+            Debug.Log("Player exited platform");
             playerTransform.SetParent(null);
 
             // Re-enable gravity once the player leaves the platform

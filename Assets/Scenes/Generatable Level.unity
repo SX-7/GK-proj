@@ -191,7 +191,7 @@ PrefabInstance:
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: skull
       value: 
-      objectReference: {fileID: 4528331314712475073, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: segmentCountPerLevel
       value: 8
@@ -247,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: 'segmentsToChooseFrom.Array.data[0]'
       value: 
-      objectReference: {fileID: 5293275950873261989, guid: 8fdc93c4ba14f1a40ae154ecb9599869, type: 3}
+      objectReference: {fileID: 5293275950873261989, guid: 1a52b7368e01fa540bee0fda0aaaea64, type: 3}
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: 'segmentsToChooseFrom.Array.data[1]'
       value: 
