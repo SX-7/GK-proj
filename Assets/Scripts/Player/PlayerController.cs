@@ -57,12 +57,16 @@ public class PlayerController : MonoBehaviour
     private float capsuleColliderInitHeight;
     private Vector3 capsuleColliderInitCenter;
     private Vector3 sphereColliderInitCenter;
+    public static int Score;
     //State trackers
     private bool crouching = false;
     private bool dashing = false;
     private bool slowing = false;
     private bool isPaused = false;
     private bool climbing = false;
+    private bool completeStasis = false;
+    private bool dead = false;
+
     //Delegates/Events
     public delegate void ReceiveDamageAction(DamageInfo damageInfo);
     public static event ReceiveDamageAction OnReceiveDamage;
@@ -84,6 +88,8 @@ public class PlayerController : MonoBehaviour
     public static event Interact OnInteract;
     public delegate void PauseAction(bool paused);
     public static event PauseAction OnPause;
+    public delegate void RespawnAction(bool finishedLockout);
+    public static event RespawnAction OnRespawn;
     //External references
     [Header("Object References")]
     [Tooltip("Rigidbody")][SerializeField] Rigidbody rb;
@@ -94,6 +100,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Fade in/out ppv")][SerializeField] PostProcessVolume ppv;
     [Header("Context Relevant Variables")]
     [Tooltip("Respawn position")][SerializeField] Vector3 respawnPosition;
+    public Vector3 RespawnPosition { get => respawnPosition; }
+    [Tooltip("Used on every respawn")][SerializeField] Vector3 skullRespawnOffset;
+    public Vector3 SkullRespawnOffset { get => skullRespawnOffset; }
     [Header("Physics/Rigidbody Variables - Preferably don't edit")]
     [Tooltip("Percentage Value")][SerializeField] float crouchColliderScale = 0.5f;
     [SerializeField] Vector3 capsuleColliderCrouchCenter = new(0, 0.6f, 0);
@@ -109,6 +118,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        cam.fieldOfView = DataStore.Instance.FOV;
         ppv.weight = 1;
         //make sure we initialize with something
         if (rb == null) { rb = GetComponent<Rigidbody>(); }
@@ -120,6 +130,7 @@ public class PlayerController : MonoBehaviour
         sphereColliderInitCenter = sph.center;
         origCamPos = cam.transform.localPosition;
         if (respawnPosition == null) { respawnPosition = transform.position; }
+        if (skullRespawnOffset == null) { skullRespawnOffset = new Vector3(0, 0, -20); }
         currentHealth = InitHealth;
         Cursor.visible = isPaused;
         SnapSetRespawn();
@@ -147,18 +158,24 @@ public class PlayerController : MonoBehaviour
                 //smoothening magic :shrug:
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 isPaused = false;
+                DataStore.Instance.MuteSFX = false;
+                DataStore.Instance.MuteMusic = false;
+
             }
             else
             {
                 Time.timeScale = 0f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 isPaused = true;
+                DataStore.Instance.MuteSFX = true;
+                DataStore.Instance.MuteMusic = true;
+
             }
             OnPause?.Invoke(isPaused);
             pauseMenu.SetActive(isPaused);
             Cursor.visible = isPaused;
         }
-        if (!isPaused)
+        if (!isPaused & !dead)
         {
             DoSlowMotion();
             UpdateTimers();
@@ -168,16 +185,16 @@ public class PlayerController : MonoBehaviour
             {
                 ProcessActions();
             }
-            RotateCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            RotateCamera(Input.GetAxis("Mouse X") * DataStore.Instance.Sensitivity, Input.GetAxis("Mouse Y") * DataStore.Instance.Sensitivity);
             UpdateInteractables();
             if (Input.GetButtonDown("Interact"))
             {
                 AttemptInteract();
             }
-            if (Input.GetButtonDown("Respawn"))
-            {
-                Respawn();
-            }
+            //if (Input.GetButtonDown("Respawn"))
+            //{
+            //    Respawn();
+            //}
 
         }
 
@@ -231,6 +248,8 @@ public class PlayerController : MonoBehaviour
             }
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             isPaused = false;
+            DataStore.Instance.MuteSFX = false;
+            DataStore.Instance.MuteMusic = false;
         }
         OnPause?.Invoke(isPaused);
         pauseMenu.SetActive(isPaused);
@@ -314,8 +333,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Respawn();
-            currentHealth = MaxHealth;
+            Death();
         }
         else if (damage.forceRespawn)
         {
@@ -328,6 +346,7 @@ public class PlayerController : MonoBehaviour
     {
         if (health < 0)
         {
+            //ez full heal
             currentHealth = MaxHealth;
         }
         else
@@ -348,6 +367,7 @@ public class PlayerController : MonoBehaviour
 
     private void Respawn()
     {
+        OnRespawn?.Invoke(false);
         transform.position = respawnPosition;
         rb.velocity = Vector3.zero;
         //stops dashes
@@ -364,7 +384,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector3.zero;
             yield return null;
         }
-
+        OnRespawn?.Invoke(true);
     }
 
     private void ProcessActions()
@@ -389,7 +409,10 @@ public class PlayerController : MonoBehaviour
                         ).ToList();
                     if (positions.Count > 0)
                     {
-                        Climb(positions.First());
+                        var up = vaultTargets.Where(
+                        x => Vector3.Distance(GetClimbableVaultTarget(x), transform.position) < 2 * col.bounds.size.y
+                        ).ToList();
+                        Climb(positions.First(), up.First().GetComponent<Climbable>().onlyUp);
                     }
                 }
             }
@@ -576,10 +599,16 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, viewXAngle, transform.eulerAngles.z);
     }
 
-    private void Climb(Vector3 destination)
+    private void Climb(Vector3 destination, bool onlyUp)
     {
         // calculate path (up then forward)
         var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        if (onlyUp)
+        {
+            destination = midpoint;
+            midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        }
+
         inputs.ClearAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
@@ -630,13 +659,25 @@ public class PlayerController : MonoBehaviour
     private void Exit()
     {
         UnPause();
-        StartCoroutine(ExitCR());
+        StartCoroutine(ExitCR(0f));
     }
-    IEnumerator ExitCR()
+
+    private void GracefulExit()
     {
+        UnPause();
+        LockMovement(1.5f);
+        StartCoroutine(FadeOutCR(1f));
+        StartCoroutine(ExitCR(1.1f));
+        completeStasis = true;
+        dead = true;
+    }
+    IEnumerator ExitCR(float min_time)
+    {
+        var timer = 0f;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
-        while (!asyncLoad.isDone)
+        while (!asyncLoad.isDone || timer < min_time)
         {
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
@@ -644,19 +685,19 @@ public class PlayerController : MonoBehaviour
 
     private void FadeIn()
     {
-        StopCoroutine(FadeInCR());
-        StopCoroutine(FadeOutCR());
+        StopCoroutine(FadeInCR(FadeTime));
+        StopCoroutine(FadeOutCR(FadeTime));
         ppv.weight = 1;
-        StartCoroutine(FadeInCR());
+        StartCoroutine(FadeInCR(FadeTime));
     }
 
-    IEnumerator FadeInCR()
+    IEnumerator FadeInCR(float fade_time)
     {
         float timer = 0f;
-        while (timer < FadeTime)
+        while (timer < fade_time)
         {
             timer += Time.deltaTime;
-            ppv.weight = Mathf.Lerp(1, 0, timer / FadeTime);
+            ppv.weight = Mathf.Lerp(1, 0, timer / fade_time);
             yield return null;
         }
         ppv.weight = 0;
@@ -664,19 +705,19 @@ public class PlayerController : MonoBehaviour
 
     private void FadeOut()
     {
-        StopCoroutine(FadeInCR());
-        StopCoroutine(FadeOutCR());
+        StopCoroutine(FadeInCR(FadeTime));
+        StopCoroutine(FadeOutCR(FadeTime));
         ppv.weight = 0;
-        StartCoroutine(FadeOutCR());
+        StartCoroutine(FadeOutCR(FadeTime));
     }
 
-    IEnumerator FadeOutCR()
+    IEnumerator FadeOutCR(float fade_time)
     {
         float timer = 0f;
-        while (timer < FadeTime)
+        while (timer < fade_time)
         {
             timer += Time.deltaTime;
-            ppv.weight = Mathf.Lerp(0, 1, timer / FadeTime);
+            ppv.weight = Mathf.Lerp(0, 1, timer / fade_time);
             yield return null;
         }
         ppv.weight = 1;
@@ -688,7 +729,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(LockMovementCR(duration));
     }
 
-    IEnumerator LockMovementCR(float duration)
+    public IEnumerator LockMovementCR(float duration)
     {
         var timer = 0f;
         var pin = transform.position;
@@ -699,6 +740,39 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector3.zero;
             yield return null;
         }
+    }
+
+    private void Death()
+    {
+        if (!completeStasis)
+        {
+            FadeOut();
+            LockMovement(FadeTime);
+            completeStasis = true;
+            StartCoroutine(DeathCR());
+        }
+    }
+
+    IEnumerator DeathCR()
+    {
+        var timer = 0f;
+        while (timer < FadeTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        StartCoroutine(DeathSceneCR());
+    }
+
+    //TODO: no magic variable here
+    IEnumerator DeathSceneCR()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Death Scene");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Death Scene"));
     }
 }
 public struct DamageInfo

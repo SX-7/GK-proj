@@ -7,6 +7,8 @@ public class Hazard : MonoBehaviour
     [SerializeField] Collider hurtArea;
     [SerializeField] float damage;
     [SerializeField] bool forcesRespawn;
+    [Header("Does exactly that")]
+    [SerializeField] bool literallyThrowThePlayerOutToMainMenu = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +20,15 @@ public class Hazard : MonoBehaviour
     {
         if (other.gameObject.GetComponent<PlayerController>() != null)
         {
-            other.gameObject.BroadcastMessage("ReceiveDamage", new DamageInfo(damage, forcesRespawn));
+            
+            if (literallyThrowThePlayerOutToMainMenu)
+            {
+                other.gameObject.BroadcastMessage("GracefulExit");
+            }
+            else
+            {
+                other.gameObject.BroadcastMessage("ReceiveDamage", new DamageInfo(damage, forcesRespawn));
+            }
         };
     }
 }

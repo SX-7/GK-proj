@@ -9,6 +9,7 @@ public class Climbable : Walkable
 {
     //stores info about "grabbable ledges"
     public List<float> climbLevels = new List<float>();
+    public bool onlyUp = false;
     public BoxCollider bc;
 
     void OnDrawGizmosSelected()

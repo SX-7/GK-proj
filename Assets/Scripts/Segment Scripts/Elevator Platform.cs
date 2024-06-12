@@ -9,6 +9,8 @@ public class ElevatorPlatform : MonoBehaviour
     [SerializeField] public bool exitElevator = false;
     [SerializeField] float doorOpeningTime = 1;
     [SerializeField] GameObject door;
+    public delegate void EnteredFinish();
+    public static event EnteredFinish OnFinishEnter;
     public delegate void Finished();
     public static event Finished OnFinish;
     private Vector3 initDoorPos;
@@ -26,7 +28,9 @@ public class ElevatorPlatform : MonoBehaviour
         var player = other.GetComponent<PlayerController>();
         if (player != null & exitElevator &!closed)
         {
+            OnFinishEnter?.Invoke();
             CloseElevator();
+            exitElevator = false;
             player.SendMessage("FadeOut");
             player.SendMessage("LockMovement",doorOpeningTime);
             StopCoroutine(FinishedCR());
@@ -39,7 +43,7 @@ public class ElevatorPlatform : MonoBehaviour
         var timer = 0f;
         while (timer < doorOpeningTime)
         {
-            timer+= Time.deltaTime;
+            timer += Time.deltaTime;
             yield return null;
         }
         OnFinish?.Invoke();
