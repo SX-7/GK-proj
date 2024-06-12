@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LevelCreator : MonoBehaviour
@@ -9,12 +10,18 @@ public class LevelCreator : MonoBehaviour
     [SerializeField] ElevatorPlatform platform;
     [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
     private List<LevelSegment> Segments { get => segmentsToChooseFrom; }
+    [Header("Generation type")]
+    [SerializeField] bool manual = false;
+    [Header("Use these for suto generation")]
     [SerializeField] int levelCount = 3;
     [SerializeField] int segmentCountPerLevel = 10;
     private int SegmentCount { get => segmentCountPerLevel; }
-    [Header("If you put anything here, it'll use these segment indexes, in order, across stages, to create levels.")]
+    [Header("Use these for manual generation")]
+    [Tooltip("If the sum of these is smaller than length of Segment Indexes, throw error")]
+    [SerializeField] List<int> segmentsPerLevel = new();
     [SerializeField] List<int> segmentIndexes = new List<int>();
     private List<LevelSegment> instantiatedSegments = new();
+
     private PlayerController instantiatedPlayer;
     private ElevatorPlatform startPlatform;
     private ElevatorPlatform endPlatform;
@@ -53,8 +60,12 @@ public class LevelCreator : MonoBehaviour
     void Finished()
     {
         currentLevel++;
-        Debug.Log(currentLevel);
-        if (currentLevel < levelCount)
+        int adjusted_count=levelCount;
+        if (manual)
+        {
+            adjusted_count = segmentsPerLevel.Count;
+        }
+        if (currentLevel < adjusted_count)
         {
             Delete();
             Rebuild();
@@ -85,12 +96,23 @@ public class LevelCreator : MonoBehaviour
         }
         startPlatform = Instantiate(platform, baseOffset-platform.expectedPlayerPosition.position, Quaternion.identity);
         var next_position = startPlatform.transform.TransformPoint(startPlatform.SegmentExitPosition);
-        for (int i = 0; i < SegmentCount; i++)
+
+        var end_i = 0;
+        if (manual)
+        {
+            end_i = segmentsPerLevel[currentLevel];
+        }
+        else
+        {
+            end_i = SegmentCount;
+        }
+
+        for (int i = 0; i < end_i; i++)
         {
             LevelSegment segment_to_add;
-            if (segmentIndexes.Count > 0)
+            if (manual)
             {
-                segment_to_add = Segments[segmentIndexes[i + currentLevel * SegmentCount]];
+                segment_to_add = Segments[segmentIndexes[i + segmentsPerLevel.Take(currentLevel).Sum()]];
             }
             else
             {

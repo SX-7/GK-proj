@@ -729,6 +729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 2.5
+  onlyUp: 1
   bc: {fileID: 644833313}
 --- !u!1 &849686769
 GameObject:
@@ -1530,6 +1531,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4528331314712475073, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
+      propertyPath: speed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528331314712475073, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
+      propertyPath: damage
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5904270391805325506, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
       propertyPath: m_Name
       value: Skull

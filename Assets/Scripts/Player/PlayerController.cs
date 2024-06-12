@@ -402,7 +402,10 @@ public class PlayerController : MonoBehaviour
                         ).ToList();
                     if (positions.Count > 0)
                     {
-                        Climb(positions.First());
+                        var up = vaultTargets.Where(
+                        x => Vector3.Distance(GetClimbableVaultTarget(x), transform.position) < 2 * col.bounds.size.y
+                        ).ToList();
+                        Climb(positions.First(), up.First().GetComponent<Climbable>().onlyUp);
                     }
                 }
             }
@@ -589,10 +592,16 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, viewXAngle, transform.eulerAngles.z);
     }
 
-    private void Climb(Vector3 destination)
+    private void Climb(Vector3 destination, bool onlyUp)
     {
         // calculate path (up then forward)
         var midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        if (onlyUp)
+        {
+            destination = midpoint;
+            midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
+        }
+        
         inputs.ClearAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
