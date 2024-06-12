@@ -492,8 +492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14448c6605b1cc54e95569764388d8e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segmentEntryPosition: {x: 0, y: 0, z: -5.8}
-  segmentExitPosition: {x: 0, y: 0, z: 5.8}
+  segmentEntryPosition: {x: 0, y: 0, z: -6}
+  segmentExitPosition: {x: 0, y: 0, z: 6}
 --- !u!1 &7673985518803035546
 GameObject:
   m_ObjectHideFlags: 0
