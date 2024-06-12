@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 capsuleColliderInitCenter;
     private Vector3 sphereColliderInitCenter;
     public static int Score;
+    public static bool Won = false;
     //State trackers
     private bool crouching = false;
     private bool dashing = false;
