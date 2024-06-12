@@ -9,8 +9,10 @@ public class LevelCreator : MonoBehaviour
     [SerializeField] PlayerController player;
     [SerializeField] ElevatorPlatform platform;
     [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
+    [SerializeField] List<BossSegment> bossSegmentsToChooseFrom = new();
     [SerializeField] Skull skull;
     private List<LevelSegment> Segments { get => segmentsToChooseFrom; }
+    private List<BossSegment> BossSegments { get => bossSegmentsToChooseFrom; }
     [Header("Generation type")]
     [SerializeField] bool manual = false;
     [Header("Use these for suto generation")]
@@ -91,6 +93,26 @@ public class LevelCreator : MonoBehaviour
         else
         {
             Delete();
+
+            if (baseOffset == null)
+            {
+                baseOffset = transform.position;
+            }
+
+            startPlatform = Instantiate(platform, baseOffset - platform.expectedPlayerPosition.position, Quaternion.identity);
+            var next_position = startPlatform.transform.TransformPoint(startPlatform.SegmentExitPosition);
+            var segment_to_add = BossSegments[Random.Range(0, BossSegments.Count)];    
+            var boss_segment = Instantiate(segment_to_add, next_position - segment_to_add.segmentEntryPosition, segment_to_add.transform.rotation);
+            instantiatedPlayer.SendMessage("FadeIn");
+            if (boss_segment.disableSkullSpawn)
+            {
+                Destroy(instantiatedSkull.gameObject);
+            }
+            else
+            {
+                instantiatedSkull.SendMessage("PlaceAgain");
+            }
+            
         }
 
     }
