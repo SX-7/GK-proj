@@ -3482,6 +3482,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 521891076084749788}
     m_Modifications:
+    - target: {fileID: 1761211360993299004, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
+      propertyPath: damage
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1761211360993299004, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
+      propertyPath: hurtArea
+      value: 
+      objectReference: {fileID: 335948424036140143}
+    - target: {fileID: 1761211360993299004, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
+      propertyPath: forcesRespawn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2768085299496654894, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5
@@ -3542,6 +3554,11 @@ PrefabInstance:
 --- !u!4 &67628157054546574 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2768085299496654894, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
+  m_PrefabInstance: {fileID: 2781665027067112096}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &335948424036140143 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 2464580419420466895, guid: a47b6d17b2b40e34ba62f3182c4df40c, type: 3}
   m_PrefabInstance: {fileID: 2781665027067112096}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3313438444935636478
@@ -3920,7 +3937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5420538189266345507, guid: a03422748ff6d3249ade5b3b2682dc0a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.3600001
+      value: -3.31
       objectReference: {fileID: 0}
     - target: {fileID: 5420538189266345507, guid: a03422748ff6d3249ade5b3b2682dc0a, type: 3}
       propertyPath: m_LocalPosition.z
