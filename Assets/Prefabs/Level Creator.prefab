@@ -49,6 +49,9 @@ MonoBehaviour:
   segmentsToChooseFrom:
   - {fileID: 5293275950873261989, guid: d15bd546f78d785409339493397db20d, type: 3}
   - {fileID: 5293275950873261989, guid: ef10e7b1b4d4ca249a5d2b00fdcbc387, type: 3}
+  skull: {fileID: 4528331314712475073, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
+  manual: 1
   levelCount: 3
   segmentCountPerLevel: 5
-  segmentIndexes: 
+  segmentsPerLevel: 0200000002000000
+  segmentIndexes: 01000000000000000000000000000000010000000100000001000000

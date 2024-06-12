@@ -88,6 +88,8 @@ public class PlayerController : MonoBehaviour
     public static event Interact OnInteract;
     public delegate void PauseAction(bool paused);
     public static event PauseAction OnPause;
+    public delegate void RespawnAction(bool finishedLockout);
+    public static event RespawnAction OnRespawn;
     //External references
     [Header("Object References")]
     [Tooltip("Rigidbody")][SerializeField] Rigidbody rb;
@@ -98,6 +100,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Fade in/out ppv")][SerializeField] PostProcessVolume ppv;
     [Header("Context Relevant Variables")]
     [Tooltip("Respawn position")][SerializeField] Vector3 respawnPosition;
+    public Vector3 RespawnPosition { get => respawnPosition; }
+    [Tooltip("Used on every respawn")][SerializeField] Vector3 skullRespawnOffset;
+    public Vector3 SkullRespawnOffset { get => skullRespawnOffset; }
     [Header("Physics/Rigidbody Variables - Preferably don't edit")]
     [Tooltip("Percentage Value")][SerializeField] float crouchColliderScale = 0.5f;
     [SerializeField] Vector3 capsuleColliderCrouchCenter = new(0, 0.6f, 0);
@@ -125,6 +130,7 @@ public class PlayerController : MonoBehaviour
         sphereColliderInitCenter = sph.center;
         origCamPos = cam.transform.localPosition;
         if (respawnPosition == null) { respawnPosition = transform.position; }
+        if (skullRespawnOffset == null) { skullRespawnOffset = new Vector3(0, 0, -20); }
         currentHealth = InitHealth;
         Cursor.visible = isPaused;
         SnapSetRespawn();
@@ -154,13 +160,13 @@ public class PlayerController : MonoBehaviour
                 isPaused = false;
                 DataStore.Instance.MuteSFX = false;
                 DataStore.Instance.MuteMusic = false;
-                
+
             }
             else
             {
                 Time.timeScale = 0f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
-                isPaused = true; 
+                isPaused = true;
                 DataStore.Instance.MuteSFX = true;
                 DataStore.Instance.MuteMusic = true;
 
@@ -179,7 +185,7 @@ public class PlayerController : MonoBehaviour
             {
                 ProcessActions();
             }
-            RotateCamera(Input.GetAxis("Mouse X")*DataStore.Instance.Sensitivity, Input.GetAxis("Mouse Y")*DataStore.Instance.Sensitivity);
+            RotateCamera(Input.GetAxis("Mouse X") * DataStore.Instance.Sensitivity, Input.GetAxis("Mouse Y") * DataStore.Instance.Sensitivity);
             UpdateInteractables();
             if (Input.GetButtonDown("Interact"))
             {
@@ -242,8 +248,8 @@ public class PlayerController : MonoBehaviour
             }
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             isPaused = false;
-            DataStore.Instance.MuteSFX=false;
-            DataStore.Instance.MuteMusic=false;
+            DataStore.Instance.MuteSFX = false;
+            DataStore.Instance.MuteMusic = false;
         }
         OnPause?.Invoke(isPaused);
         pauseMenu.SetActive(isPaused);
@@ -361,6 +367,7 @@ public class PlayerController : MonoBehaviour
 
     private void Respawn()
     {
+        OnRespawn?.Invoke(false);
         transform.position = respawnPosition;
         rb.velocity = Vector3.zero;
         //stops dashes
@@ -377,7 +384,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector3.zero;
             yield return null;
         }
-
+        OnRespawn?.Invoke(true);
     }
 
     private void ProcessActions()
@@ -601,7 +608,7 @@ public class PlayerController : MonoBehaviour
             destination = midpoint;
             midpoint = new Vector3(transform.position.x, destination.y, transform.position.z);
         }
-        
+
         inputs.ClearAction(InputAction.Jump);
         // start coroutine with path 
         StartCoroutine(ClimbCR(midpoint, destination));
@@ -668,7 +675,7 @@ public class PlayerController : MonoBehaviour
     {
         var timer = 0f;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
-        while (!asyncLoad.isDone || timer<min_time)
+        while (!asyncLoad.isDone || timer < min_time)
         {
             timer += Time.unscaledDeltaTime;
             yield return null;
@@ -749,7 +756,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator DeathCR()
     {
         var timer = 0f;
-        while(timer< FadeTime)
+        while (timer < FadeTime)
         {
             timer += Time.deltaTime;
             yield return null;

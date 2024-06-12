@@ -6426,6 +6426,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 2381316104671450709}
   ppv: {fileID: 4153217830984390554}
   respawnPosition: {x: 0, y: 0, z: 0}
+  skullRespawnOffset: {x: 0, y: 0, z: -20}
   crouchColliderScale: 0.5
   capsuleColliderCrouchCenter: {x: 0, y: 0.6, z: 0}
   sphereColliderCrouchCenter: {x: 0, y: 0.6, z: 0}

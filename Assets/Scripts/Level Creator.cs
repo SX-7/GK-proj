@@ -9,6 +9,7 @@ public class LevelCreator : MonoBehaviour
     [SerializeField] PlayerController player;
     [SerializeField] ElevatorPlatform platform;
     [SerializeField] List<LevelSegment> segmentsToChooseFrom = new();
+    [SerializeField] Skull skull;
     private List<LevelSegment> Segments { get => segmentsToChooseFrom; }
     [Header("Generation type")]
     [SerializeField] bool manual = false;
@@ -25,6 +26,7 @@ public class LevelCreator : MonoBehaviour
     private PlayerController instantiatedPlayer;
     private ElevatorPlatform startPlatform;
     private ElevatorPlatform endPlatform;
+    private Skull instantiatedSkull;
     private int currentLevel = 0;
     private Vector3 baseOffset;
 
@@ -32,6 +34,7 @@ public class LevelCreator : MonoBehaviour
     void Awake()
     {
         ElevatorPlatform.OnFinish += Finished;
+        ElevatorPlatform.OnFinishEnter += EarlyFinish;
     }
 
 
@@ -47,16 +50,29 @@ public class LevelCreator : MonoBehaviour
         {
             instantiatedPlayer = Instantiate(player, startPlatform.expectedPlayerPosition.position, Quaternion.LookRotation(Vector3.forward));
         }
+        if(instantiatedSkull== null)
+        {
+            instantiatedSkull = Instantiate(skull, instantiatedPlayer.transform.position + instantiatedPlayer.SkullRespawnOffset, Quaternion.LookRotation(Vector3.forward));
+        }
         //weird but needed idk
         ElevatorPlatform.OnFinish -= Finished;
         ElevatorPlatform.OnFinish += Finished;
+
+        ElevatorPlatform.OnFinishEnter -= EarlyFinish;
+        ElevatorPlatform.OnFinishEnter += EarlyFinish;
     }
 
     private void OnDisable()
     {
         ElevatorPlatform.OnFinish -= Finished;
+        ElevatorPlatform.OnFinishEnter -= EarlyFinish;
     }
 
+    void EarlyFinish()
+    {
+        instantiatedSkull.SendMessage("Stop");
+        instantiatedPlayer.SendMessage("SnapSetRespawn");
+    }
     void Finished()
     {
         currentLevel++;
@@ -70,6 +86,7 @@ public class LevelCreator : MonoBehaviour
             Delete();
             Rebuild();
             instantiatedPlayer.SendMessage("FadeIn");
+            instantiatedSkull.SendMessage("PlaceAgain");
         }
         else
         {
@@ -125,5 +142,6 @@ public class LevelCreator : MonoBehaviour
         endPlatform = Instantiate(platform, next_position - platform.SegmentExitPosition, Quaternion.LookRotation(Vector3.back));
         endPlatform.exitElevator = true;
         baseOffset = endPlatform.expectedPlayerPosition.position;
+        
     }
 }
