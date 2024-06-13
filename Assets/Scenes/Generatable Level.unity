@@ -200,6 +200,10 @@ PrefabInstance:
       propertyPath: segmentCountPerLevel
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
+      propertyPath: 'bossSegmentsToChooseFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6540850817619280298, guid: ab9b93aae37ad254493d13fd1ff07831, type: 3}
     - target: {fileID: 7730877364303802111, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
