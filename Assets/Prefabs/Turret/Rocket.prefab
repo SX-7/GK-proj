@@ -124,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   explosionRadius: 1.2
-  lifetime: 10
+  lifetime: 7
   damageToPlayer: 30
   impactEffect: {fileID: 2204673395556642718, guid: 699619ee182404b40903a272c638616c, type: 3}
   flyingEffect: {fileID: 6386654018762384208, guid: 4030b7b9d74330847a3de2f2035acf7f, type: 3}

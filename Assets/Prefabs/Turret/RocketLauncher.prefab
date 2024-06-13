@@ -187,8 +187,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   col: {fileID: 2163877097006037639}
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 1
+  currentHealth: 1
 --- !u!1 &4288035656993809044
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac25d476831b0e144a842e1ae89cf875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.3
+  fireRate: 0.1
   useLaser: 0
   lineRenderer: {fileID: 0}
   bulletPrefab: {fileID: 2233935432442080750, guid: 95c70be6cdae98d44ac7194674d3d097, type: 3}

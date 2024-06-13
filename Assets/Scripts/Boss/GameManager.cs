@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-    private int victoryPoints = 0;
-    private int pointsToWin = 3;
-
-    private void Awake()
+    public static GameManager instance;
+    public int victoryPoints = 0;
+    public int pointsToWin = 1;
+    private PlayerController playerController;
+    void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -20,20 +19,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddVictoryPoint()
+    void Start()
     {
-        victoryPoints++;
-        Debug.Log("Victory Points: " + victoryPoints);
 
-        if (victoryPoints >= pointsToWin)
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
         {
-            WinGame();
+            playerController = playerObject.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                Debug.Log("FIND PLAYER COMPONENT");
+            }
+            else
+            {
+                Debug.LogError("CANT FIND PLAYER COMPONENT");
+            }
         }
     }
 
-    private void WinGame()
+    public void AddVictoryPoint()
     {
-        Debug.Log("You Win!");
+        victoryPoints++;
+        CheckVictoryPoints();
+    }
+
+    void CheckVictoryPoints()
+    {
+        if (victoryPoints >= pointsToWin)
+        {
+            VictoryAchieved();
+        }
+    }
+
+    void VictoryAchieved()
+    {
+        Debug.Log("Victory achieved! You have collected " + victoryPoints + " points.");
+        PlayerController.Won = true;
+        playerController.SendMessage("Death");
 
     }
 }
