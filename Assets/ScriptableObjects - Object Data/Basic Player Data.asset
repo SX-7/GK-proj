@@ -18,7 +18,7 @@ MonoBehaviour:
   climbingTime: 0.3
   postClimbSpeedBurstFactor: 1.5
   dashCooldown: 2
-  dashDuration: 0.3
+  dashDuration: 0.2
   dashForce: 50
   maxDashes: 3
   verticalDashForceDecrease: 20

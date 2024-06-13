@@ -184,105 +184,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2826122281228307961, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3003860272434449127, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: m_Name
       value: Level Creator
       objectReference: {fileID: 0}
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: skull
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: segmentCountPerLevel
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: segmentsPerLevel.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[0]'
+      propertyPath: manual
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[1]'
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[2]'
+      propertyPath: segmentCountPerLevel
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[3]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[4]'
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[5]'
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentIndexes.Array.data[6]'
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsPerLevel.Array.data[2]'
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsPerLevel.Array.data[3]'
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsPerLevel.Array.data[4]'
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: segmentsToChooseFrom.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[0]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 1a52b7368e01fa540bee0fda0aaaea64, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[1]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 5c90a40afe25f7345a7e273a2a000f87, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[2]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 2a87df2e4b1e64d4ea0c5f85b3cd8d15, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[3]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 1917ea1bdb9580449a5c9889db865802, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[4]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: f2e61798fb9b5264b9d5a8495e7e73e2, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[5]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 6f5dabb5771a02c438f10fe2ca65820e, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[6]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: 6ad8475f8caad0643a55ac027e270b4e, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'segmentsToChooseFrom.Array.data[7]'
-      value: 
-      objectReference: {fileID: 5293275950873261989, guid: d15bd546f78d785409339493397db20d, type: 3}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: bossSegmentsToChooseFrom.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696393967151095813, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
-      propertyPath: 'bossSegmentsToChooseFrom.Array.data[0]'
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7730877364303802111, guid: 1226ce059fb72904eb8aa22106137ef6, type: 3}
       propertyPath: m_LocalPosition.x
