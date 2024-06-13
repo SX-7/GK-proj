@@ -1,14 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VictoryPoint : MonoBehaviour
 {
+    private PlayerController playerController;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player")) 
         {
-            GameManager.Instance.AddVictoryPoint();
+            Debug.Log("VC: " + other.gameObject.name);
+            
+            GameManager.instance.AddVictoryPoint();
+
             Destroy(gameObject); 
         }
     }

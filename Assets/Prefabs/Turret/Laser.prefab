@@ -121,9 +121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11181eacb70cd864aab608bf45a1adb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 30
   explosionRadius: 0
-  lifetime: 2
+  lifetime: 3
   damageToPlayer: 3
   impactEffect: {fileID: 7453782093717725558, guid: 1602a48977962a641a41e89f3142da7f, type: 3}
   flyingEffect: {fileID: 0}
