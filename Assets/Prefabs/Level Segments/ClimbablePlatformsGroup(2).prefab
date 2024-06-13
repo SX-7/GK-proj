@@ -123,7 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 3722940870532106125}
 --- !u!114 &4328693319913739843
 MonoBehaviour:
@@ -261,7 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 5991893038715661730}
 --- !u!114 &3127062327689171757
 MonoBehaviour:
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 1204378722143616838}
 --- !u!114 &7920181820982375187
 MonoBehaviour:
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 9054927031794427805}
 --- !u!114 &5290437147577938609
 MonoBehaviour:
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 133340715454494804}
 --- !u!114 &5315668175563021630
 MonoBehaviour:
@@ -865,7 +865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 6313149815355533096}
 --- !u!114 &1050961385241139858
 MonoBehaviour:
@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbLevels:
   - 0.25
-  onlyUp: 0
+  onlyUp: 1
   bc: {fileID: 5104315282913207422}
 --- !u!114 &4835316995769283449
 MonoBehaviour:
