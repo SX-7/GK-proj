@@ -11,8 +11,6 @@
 
 # Screenshots:
 
-TBD!
-
 ![Dazzling Sights](DocsScreens/3.png)
 
 Dazzling Sights!
@@ -24,6 +22,8 @@ Exotic Creatures!
 ![Dazzling Sights](DocsScreens/1.png)
 
 A chance for an introspection...?
+
+---
 
 CC Licensed stuff:
 
