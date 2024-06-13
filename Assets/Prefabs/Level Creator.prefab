@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7730877364303802111}
   - component: {fileID: 7696393967151095813}
+  - component: {fileID: 2826122281228307961}
   m_Layer: 0
   m_Name: Level Creator
   m_TagString: Untagged
@@ -47,13 +48,115 @@ MonoBehaviour:
   player: {fileID: 2831771202787326415, guid: ee9a490d4b87d8d488e879fefedaf1f2, type: 3}
   platform: {fileID: 2147373178461599717, guid: 9615dd8df3d72b642b248b99965b1f27, type: 3}
   segmentsToChooseFrom:
-  - {fileID: 5293275950873261989, guid: d15bd546f78d785409339493397db20d, type: 3}
-  - {fileID: 5293275950873261989, guid: ef10e7b1b4d4ca249a5d2b00fdcbc387, type: 3}
+  - {fileID: 5293275950873261989, guid: 1a52b7368e01fa540bee0fda0aaaea64, type: 3}
+  - {fileID: 5293275950873261989, guid: 5c90a40afe25f7345a7e273a2a000f87, type: 3}
+  - {fileID: 5293275950873261989, guid: 2a87df2e4b1e64d4ea0c5f85b3cd8d15, type: 3}
+  - {fileID: 5293275950873261989, guid: 1917ea1bdb9580449a5c9889db865802, type: 3}
+  - {fileID: 5293275950873261989, guid: f2e61798fb9b5264b9d5a8495e7e73e2, type: 3}
+  - {fileID: 5293275950873261989, guid: 6f5dabb5771a02c438f10fe2ca65820e, type: 3}
+  - {fileID: 5293275950873261989, guid: 6ad8475f8caad0643a55ac027e270b4e, type: 3}
   bossSegmentsToChooseFrom:
-  - {fileID: 2477535966423265314, guid: 4d2355d1b8d64254fa68b88b93c6e905, type: 3}
+  - {fileID: 0}
   skull: {fileID: 4528331314712475073, guid: 3d6e9869f95ab6e4686a09ea39d879fd, type: 3}
   manual: 1
   levelCount: 3
-  segmentCountPerLevel: 5
-  segmentsPerLevel: 0200000002000000
-  segmentIndexes: 01000000000000000000000000000000010000000100000001000000
+  segmentCountPerLevel: 8
+  segmentsPerLevel: 020000000200000002000000
+  segmentIndexes: 00000000010000000200000003000000040000000500000006000000
+--- !u!82 &2826122281228307961
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003860272434449127}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: d62d5787b906951419f1ca35b56c0f4d, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 76a6551d87ae7de46ad19709ce57bf36, type: 3}
+  m_Resource: {fileID: 8300000, guid: 76a6551d87ae7de46ad19709ce57bf36, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

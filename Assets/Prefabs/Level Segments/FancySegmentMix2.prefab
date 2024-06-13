@@ -13882,7 +13882,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
@@ -14070,7 +14070,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
@@ -15476,7 +15476,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
@@ -16099,7 +16099,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
@@ -16235,7 +16235,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
@@ -17203,7 +17203,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178134485734387046, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: bounceStrength
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3861776752284189819, guid: 47192d9d487e7194894b1209a4b71edc, type: 3}
       propertyPath: m_Name
